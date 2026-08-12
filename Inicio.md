@@ -22,21 +22,24 @@ tags:
 ## 🧠 Conceptos
 
 - [[Reducción de Niveles de Gris]] — cuantización de 256 a 8 niveles
+- [[Tamaño de una Imagen Digital]] — b = N × M × k y k = log2(L)
+- [[Resolución de Imagen]] — muestreo vs cuantización
+- [[Interpolación]] — vecino más cercano, bilineal, bicúbica
 
 ## 💻 Código
 
-- [[Reducción de Niveles de Gris - Python]] — implementación en NumPy/Matplotlib (Colab)
+- [[Reducción de Niveles de Gris - Python]] — cuantización a 64, 20, 8 y 2 niveles (Colab)
 
 ## 🗺️ Estructura de la bóveda
 
 ```mermaid
-graph LR
-    Inicio[🏠 Inicio] --> Clases
-    Inicio --> Conceptos
-    Inicio --> Codigo[Código]
-    Clases --> C1[Clase 2026-08-12]
+graph TD
+    Inicio[🏠 Inicio] --> C1[Clase 2026-08-12 Fundamentos]
     C1 --> N1[Reducción de Niveles de Gris]
-    C1 --> P1[Python]
+    C1 --> N2[Tamaño de Imagen Digital]
+    C1 --> N3[Resolución de Imagen]
+    C1 --> N4[Interpolación]
+    C1 --> P1[Python - Cuantización]
     N1 --> P1
 ```
 

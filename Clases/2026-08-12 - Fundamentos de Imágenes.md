@@ -16,18 +16,26 @@ tags:
 
 ## 📝 Temas vistos
 
-1. **Reducción de niveles de gris**: cuantización de 256 a 8 niveles (y a 2 niveles).
-2. **Implementación en Python** con NumPy, Matplotlib y Pillow en Google Colab.
+1. **Reducción de niveles de gris**: cuantización de 256 a 64, 20, 8 y 2 niveles.
+2. **Tamaño de una imagen digital**: $b = N \times M \times k$ y cómo hallar $k = \log_2(L)$.
+3. **Resolución de imagen**: muestreo (resolución espacial) vs cuantización (resolución de intensidad).
+4. **Interpolación**: vecino más cercano, bilineal y bicúbica.
+5. **Implementación en Python** con NumPy, Matplotlib y Pillow en Google Colab.
 
 ## 🔗 Notas relacionadas
 
-- 🧠 Concepto: [[Reducción de Niveles de Gris]]
+- 🧠 Conceptos:
+  - [[Reducción de Niveles de Gris]]
+  - [[Tamaño de una Imagen Digital]]
+  - [[Resolución de Imagen]]
+  - [[Interpolación]]
 - 💻 Código: [[Reducción de Niveles de Gris - Python]]
 
 ## 📌 Pendientes / tareas
 
-- [ ] Repasar la generalización: $q = \frac{256}{N}$
+- [ ] Repasar la generalización: $q = \frac{256}{L}$ y $k = \log_2(L)$
 - [ ] Probar el código con una imagen propia
+- [ ] Investigar un ejemplo de interpolación aplicado a agrandar una imagen
 
 ## 🏷️ Etiquetas
 
