@@ -1,0 +1,6 @@
+# Estado local de la interfaz de Obsidian (no debe versionarse)
+.obsidian/workspace.json
+.obsidian/cache
+
+# Papelera de Obsidian
+.trash/
