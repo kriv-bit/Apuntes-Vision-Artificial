@@ -1,8 +1,7 @@
 ---
 titulo: "{{title}}"
 materia: Visión Artificial
-unidad: 
-tipo: apunte
+tipo: concepto
 fecha: "{{date}}"
 tags:
   - visión-artificial
@@ -12,13 +11,11 @@ aliases:
 
 # {{title}}
 
-## 🎯 Objetivo
+## 🎯 Definición
 
-> ¿Qué vamos a lograr con este tema?
+> ¿Qué es? ¿Qué problema resuelve?
 
 ## 🧠 Idea clave
-
-> Concepto central en una o dos frases.
 
 ## 🧮 Desarrollo
 

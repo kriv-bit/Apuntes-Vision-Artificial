@@ -1,8 +1,7 @@
 ---
 titulo: Reducción de Niveles de Gris
 materia: Visión Artificial
-unidad: 01 - Fundamentos de Imágenes
-tipo: apunte
+tipo: concepto
 fecha: 2026-08-12
 tags:
   - visión-artificial
@@ -90,6 +89,19 @@ flowchart LR
 
 Después de dividir, el resultado es un número entre 0 y 8 (por ejemplo, 1.34). No podemos asignarle al píxel una intensidad en ese rango: la imagen necesita intensidades en el rango completo (0 a 255). Por eso primero **encontramos el nivel** y luego **multiplicamos por 32** para darle al píxel la intensidad completa correspondiente a ese nivel.
 
+## 🧩 Generalización
+
+La fórmula funciona para **cualquier cantidad de niveles** $N$:
+
+$$ q = \frac{256}{N} \qquad \text{y} \qquad nuevo\_valor = \left\lfloor \frac{pixel}{q} \right\rfloor \times q $$
+
+| Niveles $N$ | $q = 256/N$ | Valores posibles |
+| :---------: | :---------: | :--------------: |
+| 8 | 32 | 0, 32, 64, 96, 128, 160, 192, 224 |
+| 2 | 128 | 0 y 128 |
+
+Cuanto menor sea $N$, más agresiva es la homogenización y más se pierde información visual.
+
 ## ✅ Resultado
 
 - **Antes:** la matriz manejaba hasta 255 valores diferentes.
@@ -99,6 +111,8 @@ Después de dividir, el resultado es un número entre 0 y 8 (por ejemplo, 1.34).
 ## 🔗 Relacionado
 
 - [[Inicio]] — mapa de contenidos de la materia
+- [[2026-08-12 - Fundamentos de Imágenes]] — clase donde se vio este tema
+- [[Reducción de Niveles de Gris - Python]] — implementación en Python
 - *Pendiente:* suavizado de imágenes, histogramas
 
 ## 🏷️ Etiquetas
