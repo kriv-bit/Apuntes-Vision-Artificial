@@ -29,13 +29,17 @@ tags:
   - [[Tamaño de una Imagen Digital]]
   - [[Resolución de Imagen]]
   - [[Interpolación]]
-- 💻 Código: [[Reducción de Niveles de Gris - Python]]
+- 💻 Código:
+  - [[Reducción de Niveles de Gris - Python]]
+  - [[Interpolación y Redimensionamiento - Python]]
+- 📅 Siguiente sesión:
+  - [[2026-08-18 - Interpolación y Redimensionamiento]]
 
 ## 📌 Pendientes / tareas
 
-- [ ] Repasar la generalización: $q = \frac{256}{L}$ y $k = \log_2(L)$
+- [x] Repasar la generalización: $q = \frac{256}{L}$ y $k = \log_2(L)$
 - [ ] Probar el código con una imagen propia
-- [ ] Investigar un ejemplo de interpolación aplicado a agrandar una imagen
+- [x] Investigar un ejemplo de interpolación aplicado a agrandar una imagen *(completado en [[Interpolación y Redimensionamiento - Python]])*
 
 ## 🏷️ Etiquetas
 
