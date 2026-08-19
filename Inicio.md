@@ -19,6 +19,7 @@ tags:
 
 - [[2026-08-12 - Fundamentos de Imágenes]] — fundamentos, niveles de gris, resolución y Python (Colab)
 - [[2026-08-18 - Interpolación y Redimensionamiento]] — escalado $3\times$, interpolación (Nearest, Linear, Cubic, Exact) y Zoom en OpenCV
+- [[2026-08-19 - Relaciones entre Píxeles y Métricas de Distancia]] — vecindades ($N_4, N_D, N_8$), $m$-adyacencia, caminos y distancias ($D_e, D_4, D_8$)
 
 ## 🧠 Conceptos
 
@@ -26,11 +27,14 @@ tags:
 - [[Tamaño de una Imagen Digital]] — $b = N \times M \times k$ y $k = \log_2(L)$
 - [[Resolución de Imagen]] — muestreo (espacial) vs cuantización (intensidad)
 - [[Interpolación]] — vecino más cercano, bilineal, bicúbica y variantes exactas
+- [[Vecindad y Adyacencia de Píxeles]] — $N_4, N_D, N_8$, conjunto $V$, 4/8-adyacencia y $m$-adyacencia
+- [[Métricas de Distancia en Imágenes]] — formulación y cálculo de $D_e, D_4, D_8$
 
 ## 💻 Código
 
 - [[Reducción de Niveles de Gris - Python]] — cuantización a 64, 20, 8 y 2 niveles con NumPy y Pillow
 - [[Interpolación y Redimensionamiento - Python]] — redimensionamiento con `cv2.resize`, métodos clásicos y variantes `_EXACT` con inspección por zoom
+- [[Métricas de Distancia y Conectividad - Python]] — funciones de cálculo de $D_e, D_4, D_8$ y mapas de isolíneas
 
 ## 🗺️ Estructura de la bóveda
 
@@ -38,6 +42,7 @@ tags:
 graph TD
     Inicio[🏠 Inicio] --> C1[Clase 2026-08-12 Fundamentos]
     Inicio --> C2[Clase 2026-08-18 Interpolación]
+    Inicio --> C3[Clase 2026-08-19 Relaciones y Distancias]
     
     C1 --> N1[Reducción de Niveles de Gris]
     C1 --> N2[Tamaño de Imagen Digital]
@@ -49,8 +54,14 @@ graph TD
     C2 --> N3
     C2 --> P2[Python - Interpolación OpenCV]
     
+    C3 --> N5[Vecindad y Adyacencia]
+    C3 --> N6[Métricas de Distancia]
+    C3 --> P3[Python - Distancias De D4 D8]
+    
     N1 --> P1
     N4 --> P2
+    N5 --> N6
+    N6 --> P3
 ```
 
 ## 🛠️ Plantillas
@@ -85,4 +96,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#niveles-de-gris`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias`

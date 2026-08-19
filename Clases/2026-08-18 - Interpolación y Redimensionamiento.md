@@ -1,4 +1,4 @@
-﻿---
+---
 titulo: "Clase 2 — Interpolación y Redimensionamiento"
 materia: Visión Artificial
 tipo: clase
@@ -43,8 +43,8 @@ tags:
 
 ## 📌 Pendientes / tareas
 
-- [ ] Comparar el rendimiento computacional de cada método en imágenes de alta resolución.
-- [ ] Analizar el comportamiento de INTER_CUBIC frente a INTER_LANCZOS4.
+- [x] Comparar el rendimiento computacional de cada método en imágenes de alta resolución.
+- [x] Analizar el comportamiento de INTER_CUBIC frente a INTER_LANCZOS4.
 
 ## 🏷️ Etiquetas
 

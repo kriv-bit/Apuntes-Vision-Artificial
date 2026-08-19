@@ -38,7 +38,7 @@ tags:
 ## 📌 Pendientes / tareas
 
 - [x] Repasar la generalización: $q = \frac{256}{L}$ y $k = \log_2(L)$
-- [ ] Probar el código con una imagen propia
+- [x] Probar el código con una imagen propia
 - [x] Investigar un ejemplo de interpolación aplicado a agrandar una imagen *(completado en [[Interpolación y Redimensionamiento - Python]])*
 
 ## 🏷️ Etiquetas
