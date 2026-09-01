@@ -11,31 +11,25 @@ tags:
   - scikit-image
   - matplotlib
   - operaciones-aritméticas
+  - operaciones-lógicas
 aliases:
   - Código suma y normalización de imágenes
   - Operaciones punto a punto OpenCV
+  - Operaciones bitwise OpenCV
 ---
 
-# Operaciones Aritméticas y Normalización — Python
+# Operaciones Aritméticas, Lógicas y Normalización — Python
 
 > [!info] ¿Qué es este código?
-> Este script demuestra cómo realizar operaciones aritméticas entre imágenes digitales con **OpenCV**, **NumPy** y **scikit-image**, comparando visualmente el efecto del **desbordamiento modular (overflow)**, la **saturación (clipping)** y la **normalización / mezcla ponderada**.
+> Este script completo cubre las operaciones punto a punto entre imágenes digitales con **OpenCV**, **NumPy** y **scikit-image**:
+> 1. **Suma:** Desbordamiento modular (overflow), saturación y mezcla ponderada normalizada.
+> 2. **Resta:** Resta saturada (`cv2.subtract`) frente a diferencia absoluta (`cv2.absdiff`).
+> 3. **Máscaras sintéticas:** Dibujo de círculos y rectángulos con OpenCV.
+> 4. **Álgebra de Boole:** Operadores a nivel de bits (`bitwise_and`, `bitwise_or`, `bitwise_xor`, `bitwise_not`).
 
 > [!info] Clase y teoría relacionadas
 > 📅 Clase: [[2026-09-01 - Operaciones Aritméticas y Lógicas entre Imágenes]]
-> 🧠 Conceptos: [[Operaciones Aritméticas entre Imágenes]] y [[Desbordamiento y Normalización de Imágenes]]
-
----
-
-## 🎯 Qué hace el programa
-
-1. Carga dos imágenes de prueba estándar (`cameraman` y `coins`) desde el paquete `skimage.data`.
-2. Ajusta las dimensiones de la segunda imagen para que coincida exactamente con la primera usando `cv2.resize`.
-3. Aplica **3 variantes de suma**:
-   - **Desbordamiento Modular (`img1 + img2`)**: Aritmética `uint8` estándar en NumPy con módulo 256.
-   - **Suma Saturada (`cv2.add(img1, img2)`)**: Trunca cualquier valor $> 255$ fijándolo en 255.
-   - **Mezcla Ponderada / Normalizada (`cv2.addWeighted`)**: Aplica $\alpha f_1 + \beta f_2$ para mantener las intensidades dentro del rango visible sin quemar la imagen.
-4. Grafica y contrasta los resultados en subplots de Matplotlib.
+> 🧠 Conceptos: [[Operaciones Aritméticas entre Imágenes]], [[Desbordamiento y Normalización de Imágenes]] y [[Operaciones Lógicas y Álgebra Booleana en Imágenes]]
 
 ---
 
@@ -55,15 +49,16 @@ import cv2
 import matplotlib.pyplot as plt
 from skimage import data
 
-# Configuración de tamaño de figuras
+# Configuración global de tamaño de figuras
 plt.rcParams["figure.figsize"] = (10, 5)
 
-# 1. Carga de imágenes de muestra
+# ==============================================================================
+# 1. CARGA Y HOMOGENEIZACIÓN DE DIMENSIONES
+# ==============================================================================
 img1 = data.camera()
 img2 = data.coins()
 
-# 2. Homogeneización de dimensiones (Requisito indispensable para operar matrices)
-# Nota: img1.shape[1] = ancho (columnas), img1.shape[0] = alto (filas)
+# Ajustar img2 para que coincida exactamente con las dimensiones de img1 (w, h)
 img2 = cv2.resize(img2, (img1.shape[1], img1.shape[0]))
 
 # Visualización de imágenes fuente
@@ -78,31 +73,24 @@ axis[1].axis("off")
 plt.tight_layout()
 plt.show()
 
+
 # ==============================================================================
-# 3. OPERACIONES DE SUMA Y MANEJO DEL RANGO DINÁMICO
+# 2. OPERACIONES DE SUMA Y MANEJO DEL RANGO DINÁMICO
 # ==============================================================================
 
-# A. Desbordamiento Modular (Overflow en uint8):
-# Si 200 + 100 = 300 -> 300 % 256 = 44 (Pérdida drástica de brillo)
+# A. Desbordamiento Modular (Overflow en uint8 con NumPy):
+# 200 + 100 = 300 -> 300 % 256 = 44 (Píxeles blancos se vuelven oscuros)
 overflow_add = img1 + img2 
 
-# B. Suma con Saturación / Truncamiento (OpenCV):
-# Si el resultado > 255, se establece en 255 (Zona blanca/quemada)
+# B. Suma Saturada (OpenCV):
+# Trunca cualquier valor > 255 al máximo 255 (Zona quemada)
 saturated_add = cv2.add(img1, img2)
 
-# C. Mezcla Ponderada (AddWeighted - Normalización al 50%):
-# Formula: 0.5 * img1 + 0.5 * img2 + 0
+# C. Mezcla Ponderada / Normalizada:
+# 0.5 * img1 + 0.5 * img2 + 0 -> Mantiene el rango sin quemar
 normaliced_add = cv2.addWeighted(img1, 0.5, img2, 0.5, 0)
 
-# D. Alternativa: Normalización Min-Max pura por software
-suma_float = img1.astype(float) + img2.astype(float)
-min_val, max_val = suma_float.min(), suma_float.max()
-minmax_norm = 255.0 * ((suma_float - min_val) / (max_val - min_val))
-minmax_norm = minmax_norm.astype(np.uint8)
-
-# 4. Comparación de los resultados
 fig, axis = plt.subplots(1, 3, figsize=(15, 5))
-
 axis[0].imshow(overflow_add, cmap="gray")
 axis[0].set_title("Overflow (NumPy +)")
 axis[0].axis("off")
@@ -114,6 +102,101 @@ axis[1].axis("off")
 axis[2].imshow(normaliced_add, cmap="gray")
 axis[2].set_title("Normalized (cv2.addWeighted)")
 axis[2].axis("off")
+plt.tight_layout()
+plt.show()
+
+
+# ==============================================================================
+# 3. OPERACIONES DE RESTA: SATURADA VS DIFERENCIA ABSOLUTA
+# ==============================================================================
+
+# A. Resta saturada (valores negativos se sustituyen por 0):
+saturated_sub = cv2.subtract(img1, img2)
+
+# B. Diferencia absoluta |img1 - img2| (detecta variaciones reales):
+absolute_sub = cv2.absdiff(img1, img2)
+
+fig, axis = plt.subplots(1, 2, figsize=(12, 5))
+axis[0].imshow(saturated_sub, cmap="gray")
+axis[0].set_title("Saturated Sub (cv2.subtract)")
+axis[0].axis("off")
+
+axis[1].imshow(absolute_sub, cmap="gray")
+axis[1].set_title("Absolute Sub (cv2.absdiff)")
+axis[1].axis("off")
+plt.tight_layout()
+plt.show()
+
+
+# ==============================================================================
+# 4. GENERACIÓN DE MÁSCARAS SINTÉTICAS
+# ==============================================================================
+h, w = img1.shape
+
+# A. Máscara Circular (centrada, radio = min(h,w)//4)
+msk_circle = np.zeros((h, w), dtype=np.uint8)
+cv2.circle(
+    msk_circle,
+    (w // 2, h // 2),        # Coordenadas del centro (x, y)
+    min(h, w) // 4,          # Radio del círculo
+    255,                     # Color blanco
+    -1                       # Grosor -1 = relleno sólido
+)
+
+# B. Máscara Rectangular (centrada entre w/3 y 2w/3)
+msk_rect = np.zeros((h, w), dtype=np.uint8)
+cv2.rectangle(
+    msk_rect,
+    (w // 3, h // 3),        # Esquina superior izquierda (x1, y1)
+    (2 * w // 3, 2 * h // 3),# Esquina inferior derecha (x2, y2)
+    255,                     # Color blanco
+    -1                       # Relleno sólido
+)
+
+fig, axis = plt.subplots(1, 2, figsize=(10, 5))
+axis[0].imshow(msk_circle, cmap="gray")
+axis[0].set_title("Mask Circle")
+axis[0].axis("off")
+
+axis[1].imshow(msk_rect, cmap="gray")
+axis[1].set_title("Mask Rectangle")
+axis[1].axis("off")
+plt.tight_layout()
+plt.show()
+
+
+# ==============================================================================
+# 5. OPERACIONES LÓGICAS BIT A BIT (ÁLGEBRA DE BOOLE)
+# ==============================================================================
+
+# AND: Enmascaramiento para extraer la ROI circular sobre el cameraman
+and_operator = cv2.bitwise_and(img1, img1, mask=msk_circle)
+
+# OR: Unión de las dos máscaras geométricas
+or_operator = cv2.bitwise_or(msk_circle, msk_rect)
+
+# XOR: Diferencia simétrica (apaga la intersección y deja solo los bordes)
+xor_operator = cv2.bitwise_xor(msk_circle, msk_rect)
+
+# NOT: Inversión de la máscara circular (negativo)
+not_operator = cv2.bitwise_not(msk_circle)
+
+fig, axis = plt.subplots(1, 4, figsize=(18, 5))
+axis[0].imshow(and_operator, cmap="gray")
+axis[0].set_title("AND Operator (ROI)")
+axis[0].axis("off")
+
+axis[1].imshow(or_operator, cmap="gray")
+axis[1].set_title("OR Operator (Unión)")
+axis[1].axis("off")
+
+axis[2].imshow(xor_operator, cmap="gray")
+axis[2].set_title("XOR Operator (Diff)")
+axis[2].axis("off")
+
+axis[3].imshow(not_operator, cmap="gray")
+axis[3].set_title("NOT Operator (Invert)")
+axis[3].axis("off")
 
 plt.tight_layout()
 plt.show()
@@ -121,39 +204,34 @@ plt.show()
 
 ---
 
-## 🔍 Explicación paso a paso
+## 🔍 Explicación paso a paso de los resultados
 
-### 1. Imágenes Fuente
-![[operaciones-imagenes-fuente.png]]
+### 1. Resta Saturada frente a Diferencia Absoluta
+![[operaciones-resta-comparacion.png]]
 
-Antes de ejecutar cualquier suma o resta elemento a elemento, ambas imágenes deben poseer exactamente el mismo tamaño espacial $(H \times W)$.
+- `cv2.subtract(img1, img2)`: Donde las monedas eran más brillantes que el fotógrafo, la resta dio números negativos truncados a **0 (negro)**, perdiéndose la forma de la persona en esas zonas.
+- `cv2.absdiff(img1, img2)`: Al aplicar valor absoluto $|f_1 - f_2|$, preserva la silueta completa sin importar qué objeto sea más brillante.
 
-### 2. Comparación de Métodos de Suma
-![[operaciones-suma-comparacion.png]]
+### 2. Máscaras Sintéticas
+![[operaciones-mascaras-sinteticas.png]]
 
-- **Overflow (`img1 + img2`)**: Las monedas sobre el cielo blanco producen manchas oscuras inesperadas porque $250 + 80 = 330 \to 74$.
-- **Saturated (`cv2.add`)**: El cielo y las monedas claras se saturan a $255$ (blanco plano), perdiendo textura interior.
-- **Normalized (`cv2.addWeighted` / Min-Max)**: Ambas imágenes se fusionan en transparencia perfecta sin quemar las altas luces ni introducir artefactos oscuros.
+- Permiten definir zonas espaciales arbitrarias en blanco ($255$) sobre fondo negro ($0$).
 
----
+### 3. Álgebra de Boole sobre Imágenes
+![[operaciones-logicas-bitwise.png]]
 
-## ⚠️ Errores comunes
-
-1. **Intentar operar imágenes con distinta resolución**:
-   - `ValueError: operands could not be broadcast together with shapes...`
-   - **Solución:** Redimensionar con `cv2.resize(img2, (img1.shape[1], img1.shape[0]))`.
-2. **Confundir la suma de NumPy con la de OpenCV**:
-   - `img1 + img2` $\to$ Aritmética modular `uint8`.
-   - `cv2.add(img1, img2)` $\to$ Saturación a 255.
-3. **División por cero en corrección de sombreado**:
-   - Al dividir matrices, sumar un pequeño epsilon ($\epsilon = 10^{-6}$) al denominador para evitar divisiones indeterminadas.
+- **AND**: Aísla al cameraman dentro del círculo y apaga todo el exterior.
+- **OR**: Combina el círculo y el rectángulo formando una sola región activa continua.
+- **XOR**: Cancela la zona central donde se intersectan ambas formas, dejando únicamente los "arcos" exteriores.
+- **NOT**: Invierte la máscara dejando el centro en negro y el exterior en blanco.
 
 ---
 
 ## 🔗 Relacionado
 
-- [[Operaciones Aritméticas entre Imágenes]] — teoría de suma, resta, multiplicación y división
-- [[Desbordamiento y Normalización de Imágenes]] — formulación matemática
+- [[Operaciones Aritméticas entre Imágenes]] — teoría
+- [[Desbordamiento y Normalización de Imágenes]] — overflow y saturación
+- [[Operaciones Lógicas y Álgebra Booleana en Imágenes]] — álgebra binaria
 - [[2026-09-01 - Operaciones Aritméticas y Lógicas entre Imágenes]] — clase teórica
 - [[Inicio]] — mapa de contenidos
 
@@ -161,4 +239,4 @@ Antes de ejecutar cualquier suma o resta elemento a elemento, ambas imágenes de
 
 ## 🏷️ Etiquetas
 
-#visión-artificial #python #opencv #scikit-image #matplotlib #operaciones-aritméticas #normalización
+#visión-artificial #python #opencv #scikit-image #matplotlib #operaciones-aritméticas #operaciones-lógicas #normalización
