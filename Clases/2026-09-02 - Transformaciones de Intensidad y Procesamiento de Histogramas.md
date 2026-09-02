@@ -31,9 +31,11 @@ tags:
    - **Transformación Logarítmica ($s = c \log(1 + r)$)**: Expande intensidades oscuras haciendo visibles detalles tenues en el terreno lunar.
    - **Corrección Gamma ($s = c \cdot r^\gamma$)**: Función modular `gamma_transform` probada con $\gamma = 0.5$ (aclarado), $\gamma = 1.0$ (identidad) y $\gamma = 2.0$ (oscurecido de sombras).
    - **Estiramiento de Contraste por Percentiles**: Selección de umbrales robustos con `np.percentile(img, p)` y truncamiento seguro con `np.clip`.
-3. **Histogramas de Imagen y Ecualización**:
-   - Diagnóstico visual de iluminación y contraste mediante la función de distribución de frecuencias.
-   - Ecualización de histograma basada en la Función de Distribución Acumulada (CDF) para maximizar el rango dinámico.
+3. **Análisis de Histogramas de Imagen**:
+   - Diagnóstico visual de la imagen lunar: histograma con un pico muy estrecho concentrado alrededor de nivel $115$ (característica de imagen de **bajo contraste** y tonos grises homogéneos).
+   - Efecto del estiramiento extremo de contraste: el histograma original concentrado colapsa en dos picos extremos en $0$ y $255$.
+4. **Ecualización de Histograma**:
+   - Redistribución estadística mediante la Función de Distribución Acumulada (CDF) para maximizar el rango dinámico en imágenes opacas.
 
 ---
 
@@ -75,20 +77,24 @@ $$ s = \text{clip}\left( \frac{r - r_{\min}}{r_{\max} - r_{\min}} \times 255, 0,
 
 ## 🖼️ Resultados Visuales de la Sesión
 
-### 1. Imagen Original (`skimage.data.moon()`)
-![[transformacion-luna-original.png]]
+### 1. Imagen Original vs Negativo
+![[transformacion-luna-original.png]] ![[transformacion-luna-negativo.png]]
 
-### 2. Inversión Fotográfica / Negativo
-![[transformacion-luna-negativo.png]]
-
-### 3. Transformación Logarítmica
+### 2. Transformación Logarítmica
 ![[transformacion-luna-logaritmica.png]]
 
-### 4. Comparativa de Corrección Gamma ($\gamma = 0.5, 1.0, 2.0$)
+### 3. Comparativa de Corrección Gamma ($\gamma = 0.5, 1.0, 2.0$)
 ![[transformacion-luna-gamma-comparacion.png]]
 
-### 5. Estiramiento de Contraste con Percentiles
+### 4. Estiramiento de Contraste con Percentiles
 ![[transformacion-luna-estiramiento-percentiles.png]]
+
+### 5. Análisis Comparativo de Histogramas (Original vs Binarizado por Percentiles)
+![[transformacion-luna-histogramas-comparacion.png]]
+
+> [!note] Interpretación del Histograma
+> - **Arriba (Original):** Distribución unimodal estrecha entre $100$ y $130$, con casi cero píxeles negros puros ($0$) o blancos puros ($255$).
+> - **Abajo (Estiramiento $P_{40}-P_{50}$):** Los píxeles colapsan en dos barras masivas en $0$ (~145.000 píxeles) y $255$ (~115.000 píxeles), evidenciando la binarización de la imagen.
 
 ---
 
@@ -107,7 +113,7 @@ $$ s = \text{clip}\left( \frac{r - r_{\min}}{r_{\max} - r_{\min}} \times 255, 0,
 ## 📌 Pendientes / tareas
 
 - [ ] Comparar el estiramiento de percentiles amplios ($P_2$ a $P_{98}$) frente al estiramiento estrecho ($P_{40}$ a $P_{50}$).
-- [ ] Implementar CLAHE sobre la imagen lunar para realzar el relieve de los cráteres.
+- [ ] Implementar CLAHE sobre la imagen lunar para realzar el relieve de los cráteres sin binarizar.
 
 ## 🏷️ Etiquetas
 

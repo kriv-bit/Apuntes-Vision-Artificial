@@ -12,6 +12,7 @@ tags:
   - matplotlib
   - transformaciones-espaciales
   - corrección-gamma
+  - histogramas
 aliases:
   - Código transformaciones de intensidad
   - Código corrección gamma y estiramiento
@@ -20,7 +21,12 @@ aliases:
 # Transformaciones de Intensidad y Histogramas — Python
 
 > [!info] ¿Qué es este código?
-> Este script implementa en **Python (NumPy, Matplotlib y scikit-image)** las principales transformaciones de intensidad en el dominio espacial aplicadas sobre la imagen lunar (`data.moon()`): **Negativo**, **Transformación Logarítmica**, **Corrección Gamma** ($\gamma = 0.5, 1.0, 2.0$) y **Estiramiento de Contraste con Percentiles** (`np.percentile` y `np.clip`).
+> Este script implementa en **Python (NumPy, Matplotlib y scikit-image)** las principales transformaciones de intensidad en el dominio espacial aplicadas sobre la imagen lunar (`data.moon()`):
+> 1. **Negativo fotográfico** ($s = 255 - r$).
+> 2. **Transformación Logarítmica** ($s = c \log(1 + r)$).
+> 3. **Corrección Gamma** ($\gamma = 0.5, 1.0, 2.0$).
+> 4. **Estiramiento de Contraste con Percentiles** (`np.percentile` y `np.clip`).
+> 5. **Análisis de Histogramas** comparando la distribución original frente al estiramiento.
 
 > [!info] Clase y conceptos relacionados
 > 📅 Clase: [[2026-09-02 - Transformaciones de Intensidad y Procesamiento de Histogramas]]
@@ -154,6 +160,37 @@ axis[1].axis('off')
 
 plt.tight_layout()
 plt.show()
+
+
+# ==============================================================================
+# 6. CÁLCULO Y VISUALIZACIÓN DE HISTOGRAMAS
+# ==============================================================================
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+
+# Imagen original y su histograma
+axes[0, 0].imshow(img, cmap='gray')
+axes[0, 0].set_title('Original')
+axes[0, 0].axis('off')
+
+axes[0, 1].hist(img.ravel(), bins=256, range=[0, 256], color='steelblue')
+axes[0, 1].set_title('Histogram (Original)')
+axes[0, 1].set_xlabel('Nivel de gris')
+axes[0, 1].set_ylabel('Frecuencia')
+axes[0, 1].set_xlim([0, 256])
+
+# Imagen con estiramiento y su histograma
+axes[1, 0].imshow(stretching, cmap='gray')
+axes[1, 0].set_title('Stretched (P40 - P50)')
+axes[1, 0].axis('off')
+
+axes[1, 1].hist(stretching.ravel(), bins=256, range=[0, 256], color='steelblue')
+axes[1, 1].set_title('Histogram (Stretched)')
+axes[1, 1].set_xlabel('Nivel de gris')
+axes[1, 1].set_ylabel('Frecuencia')
+axes[1, 1].set_xlim([0, 256])
+
+plt.tight_layout()
+plt.show()
 ```
 
 ---
@@ -182,6 +219,11 @@ plt.show()
 
 - Al fijar un rango estrecho entre los percentiles 40 y 50, los tonos intermedios se extienden al rango completo $[0, 255]$, binarizando visualmente las regiones de terreno.
 
+### 5. Comparativa de Histogramas
+![[transformacion-luna-histogramas-comparacion.png]]
+
+- Demuestra gráficamente cómo una imagen de bajo contraste posee un histograma angosto con forma de campana en el centro (~115), y cómo el estiramiento agresivo redistribuye los píxeles hacia los extremos $0$ y $255$.
+
 ---
 
 ## 🔗 Relacionado
@@ -195,4 +237,4 @@ plt.show()
 
 ## 🏷️ Etiquetas
 
-#visión-artificial #python #opencv #scikit-image #matplotlib #transformaciones-espaciales #corrección-gamma
+#visión-artificial #python #opencv #scikit-image #matplotlib #transformaciones-espaciales #corrección-gamma #histogramas
