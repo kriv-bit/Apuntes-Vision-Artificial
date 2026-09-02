@@ -8,19 +8,19 @@ tags:
   - visión-artificial
   - python
   - opencv
+  - scikit-image
   - matplotlib
-  - histogramas
-  - ecualización
+  - transformaciones-espaciales
   - corrección-gamma
 aliases:
   - Código transformaciones de intensidad
-  - Código ecualización de histograma OpenCV
+  - Código corrección gamma y estiramiento
 ---
 
 # Transformaciones de Intensidad y Histogramas — Python
 
 > [!info] ¿Qué es este código?
-> Este script implementa en **Python (OpenCV, NumPy y Matplotlib)** las transformaciones de intensidad en el dominio espacial más importantes: **Negativo**, **Logarítmica**, **Corrección Gamma**, **Estiramiento de Contraste** y **Ecualización de Histograma**.
+> Este script implementa en **Python (NumPy, Matplotlib y scikit-image)** las principales transformaciones de intensidad en el dominio espacial aplicadas sobre la imagen lunar (`data.moon()`): **Negativo**, **Transformación Logarítmica**, **Corrección Gamma** ($\gamma = 0.5, 1.0, 2.0$) y **Estiramiento de Contraste con Percentiles** (`np.percentile` y `np.clip`).
 
 > [!info] Clase y conceptos relacionados
 > 📅 Clase: [[2026-09-02 - Transformaciones de Intensidad y Procesamiento de Histogramas]]
@@ -31,7 +31,7 @@ aliases:
 ## 📦 Requisitos
 
 ```bash
-pip install opencv-python numpy matplotlib scikit-image
+pip install opencv-python-headless scikit-image numpy matplotlib
 ```
 
 ---
@@ -44,95 +44,113 @@ import cv2
 import matplotlib.pyplot as plt
 from skimage import data
 
-# ==============================================================================
-# 1. CARGA DE IMAGEN DE PRUEBA
-# ==============================================================================
-img = data.camera()  # Imagen en escala de grises (uint8, 0-255)
+# Configuración global del tamaño de figuras
+plt.rcParams["figure.figsize"] = (10, 5)
 
 # ==============================================================================
-# 2. TRANSFORMACIONES DE INTENSIDAD BÁSICAS
+# 1. CARGA DE IMAGEN DE PRUEBA (LUNA)
 # ==============================================================================
+img = data.moon()
 
-# A. Inversión Fotográfica / Negativo: s = 255 - r
-img_negativo = 255 - img
+fig, axis = plt.subplots(1)
+axis.imshow(img, cmap="gray")
+axis.set_title("Original")
+axis.axis("off")
+plt.tight_layout()
+plt.show()
 
-# B. Transformación Logarítmica: s = c * log(1 + r)
+
+# ==============================================================================
+# 2. INVERSIÓN FOTOGRÁFICA / NEGATIVO (s = 255 - r)
+# ==============================================================================
+negative = 255 - img
+
+fig, axis = plt.subplots(1)
+axis.imshow(negative, cmap='gray')
+axis.set_title('Negativo')
+axis.axis('off')
+plt.tight_layout()
+plt.show()
+
+
+# ==============================================================================
+# 3. TRANSFORMACIÓN LOGARÍTMICA (s = c * log(1 + r))
+# ==============================================================================
 # c = 255 / log(1 + max_pixel)
-c_log = 255.0 / np.log(1.0 + np.max(img))
-img_log = c_log * np.log(1.0 + img.astype(float))
-img_log = np.array(img_log, dtype=np.uint8)
+c_log = 255.0 / np.log(1.0 + img.astype(np.float64).max())
+log_transform = (c_log * np.log(1.0 + img.astype(np.float64))).astype(np.uint8)
 
-# C. Corrección Gamma (Ley de Potencias): s = 255 * (r / 255)^gamma
-gamma_low = 0.4   # Expande oscuros (aclara)
-gamma_high = 2.2  # Comprime oscuros (oscurece)
+fig, axis = plt.subplots(1)
+axis.imshow(log_transform, cmap='gray')
+axis.set_title('Logarithmic Transform')
+axis.axis('off')
+plt.tight_layout()
+plt.show()
 
-img_gamma_low = np.array(255 * (img / 255.0) ** gamma_low, dtype=np.uint8)
-img_gamma_high = np.array(255 * (img / 255.0) ** gamma_high, dtype=np.uint8)
-
-# D. Estiramiento de Contraste por Tramos (Min-Max)
-r_min, r_max = float(np.min(img)), float(np.max(img))
-img_stretched = 255.0 * ((img.astype(float) - r_min) / (r_max - r_min))
-img_stretched = img_stretched.astype(np.uint8)
 
 # ==============================================================================
-# 3. ECUALIZACIÓN DE HISTOGRAMA CON OPENCV
+# 4. CORRECCIÓN GAMMA / LEY DE POTENCIAS (s = c * r^gamma)
 # ==============================================================================
-img_eq = cv2.equalizeHist(img)
+def gamma_transform(image, gamma, c=1.0):
+    """
+    Aplica corrección gamma normalizando a [0, 1] para evitar overflow.
+    - gamma < 1: Aclara la imagen y expande oscuros.
+    - gamma = 1: Identidad.
+    - gamma > 1: Oscurece la imagen y comprime sombras.
+    """
+    norm = image.astype(np.float64) / 255.0
+    output = c * np.power(norm, gamma)
+    return np.uint8(255.0 * output)
 
-# ==============================================================================
-# 4. VISUALIZACIÓN COMPARATIVA DE TRANSFORMACIONES
-# ==============================================================================
-fig, axes = plt.subplots(2, 3, figsize=(16, 10))
+gamma_05 = gamma_transform(img, 0.5)
+gamma_10 = gamma_transform(img, 1.0)
+gamma_20 = gamma_transform(img, 2.0)
 
-axes[0, 0].imshow(img, cmap='gray')
-axes[0, 0].set_title('Original')
-axes[0, 0].axis('off')
+fig, axis = plt.subplots(1, 4, figsize=(16, 4))
 
-axes[0, 1].imshow(img_negativo, cmap='gray')
-axes[0, 1].set_title('Negativo (255 - r)')
-axes[0, 1].axis('off')
+axis[0].imshow(img, cmap='gray')
+axis[0].set_title('Original Image')
+axis[0].axis('off')
 
-axes[0, 2].imshow(img_log, cmap='gray')
-axes[0, 2].set_title('Logarítmica (c*log(1+r))')
-axes[0, 2].axis('off')
+axis[1].imshow(gamma_05, cmap='gray')
+axis[1].set_title('Gamma γ = 0.5 (Aclarado)')
+axis[1].axis('off')
 
-axes[1, 0].imshow(img_gamma_low, cmap='gray')
-axes[1, 0].set_title(f'Gamma aclarado (γ = {gamma_low})')
-axes[1, 0].axis('off')
+axis[2].imshow(gamma_10, cmap='gray')
+axis[2].set_title('Gamma γ = 1.0 (Identidad)')
+axis[2].axis('off')
 
-axes[1, 1].imshow(img_gamma_high, cmap='gray')
-axes[1, 1].set_title(f'Gamma oscurecido (γ = {gamma_high})')
-axes[1, 1].axis('off')
-
-axes[1, 2].imshow(img_eq, cmap='gray')
-axes[1, 2].set_title('Ecualización de Histograma')
-axes[1, 2].axis('off')
+axis[3].imshow(gamma_20, cmap='gray')
+axis[3].set_title('Gamma γ = 2.0 (Oscurecido)')
+axis[3].axis('off')
 
 plt.tight_layout()
 plt.show()
 
+
 # ==============================================================================
-# 5. COMPARACIÓN DE HISTOGRAMAS: ORIGINAL VS ECUALIZADA
+# 5. ESTIRAMIENTO DE CONTRASTE POR PERCENTILES CON NP.CLIP
 # ==============================================================================
-fig, axes = plt.subplots(2, 2, figsize=(14, 8))
+# Obtener percentiles para definir el rango de interés dinámico
+r_min = np.percentile(img, 40)
+r_max = np.percentile(img, 50)
 
-# Imagen original y su histograma
-axes[0, 0].imshow(img, cmap='gray')
-axes[0, 0].set_title('Imagen Original')
-axes[0, 0].axis('off')
+# Mapeo lineal y truncamiento seguro entre 0 y 255
+stretching = np.clip(
+    (img.astype(np.float64) - r_min) * 255.0 / (r_max - r_min), 
+    0, 
+    255
+).astype(np.uint8)
 
-axes[0, 1].hist(img.ravel(), bins=256, range=[0, 256], color='black', alpha=0.7)
-axes[0, 1].set_title('Histograma Original')
-axes[0, 1].set_xlim([0, 256])
+fig, axis = plt.subplots(1, 2, figsize=(10, 5))
 
-# Imagen ecualizada y su histograma
-axes[1, 0].imshow(img_eq, cmap='gray')
-axes[1, 0].set_title('Imagen Ecualizada')
-axes[1, 0].axis('off')
+axis[0].imshow(img, cmap='gray')
+axis[0].set_title('Original Image')
+axis[0].axis('off')
 
-axes[1, 1].hist(img_eq.ravel(), bins=256, range=[0, 256], color='royalblue', alpha=0.7)
-axes[1, 1].set_title('Histograma Ecualizado (Plano / Expandido)')
-axes[1, 1].set_xlim([0, 256])
+axis[1].imshow(stretching, cmap='gray')
+axis[1].set_title('Contrast Stretching (P40 - P50)')
+axis[1].axis('off')
 
 plt.tight_layout()
 plt.show()
@@ -140,31 +158,36 @@ plt.show()
 
 ---
 
-## 🔍 Explicación paso a paso
+## 🔍 Explicación paso a paso de los resultados
 
-1. **`img.ravel()`**:
-   - Aplana la matriz bidimensional $M \times N$ a un vector unidimensional $1\text{D}$, necesario para que `plt.hist()` contabilice las frecuencias de cada intensidad rápidamente.
-2. **`cv2.equalizeHist(src)`**:
-   - Calcula internamente la función de distribución acumulada (CDF) y mapea los niveles de gris para obtener un contraste máximo. Solo admite imágenes de un solo canal en `uint8`.
-3. **Conversión a coma flotante para operaciones no lineales**:
-   - Para $\log(1+r)$ o $(r/255)^\gamma$, es obligatorio convertir a `float` antes de operar, y al finalizar reconvertir a `np.uint8`.
+### 1. Imagen Original vs Negativo
+![[transformacion-luna-original.png]] ![[transformacion-luna-negativo.png]]
 
----
+- La inversión resalta las zonas de sombras profundas y los bordes convexos de los cráteres.
 
-## ⚠️ Errores comunes
+### 2. Transformación Logarítmica
+![[transformacion-luna-logaritmica.png]]
 
-- **Olvidar normalizar a $[0, 1]$ antes de aplicar Gamma**:
-  - Si calculas `img ** gamma` directamente con valores entre $0$ y $255$, $255^{2.2} \approx 198\,000$, desbordando la memoria.
-  - **Solución correcta:** `255 * (img / 255.0) ** gamma`.
-- **Aplicar `cv2.equalizeHist` a imágenes RGB directamente**:
-  - Genera aberraciones cromáticas. Para imágenes a color se debe convertir al espacio **HSV** o **YCrCb** y ecualizar únicamente el canal de luminancia ($V$ o $Y$).
+- Eleva drásticamente las intensidades medias y bajas del suelo lunar, mostrando detalles que antes estaban ocultos en la oscuridad.
+
+### 3. Respuesta Gamma ($\gamma = 0.5, 1.0, 2.0$)
+![[transformacion-luna-gamma-comparacion.png]]
+
+- **$\gamma = 0.5$**: Curva convexa $\to$ aclara la imagen general.
+- **$\gamma = 1.0$**: Mantiene la imagen sin cambios.
+- **$\gamma = 2.0$**: Curva cóncava $\to$ incrementa las sombras y el dramatismo del relieve.
+
+### 4. Estiramiento de Contraste con Percentiles
+![[transformacion-luna-estiramiento-percentiles.png]]
+
+- Al fijar un rango estrecho entre los percentiles 40 y 50, los tonos intermedios se extienden al rango completo $[0, 255]$, binarizando visualmente las regiones de terreno.
 
 ---
 
 ## 🔗 Relacionado
 
 - [[Transformaciones de Intensidad Espacial]] — teoría matemática
-- [[Histogramas y Ecualización de Imagen]] — histogramas y CDF
+- [[Histogramas y Ecualización de Imagen]] — funciones de distribución y CDF
 - [[2026-09-02 - Transformaciones de Intensidad y Procesamiento de Histogramas]] — clase teórica
 - [[Inicio]] — mapa general de la materia
 
@@ -172,4 +195,4 @@ plt.show()
 
 ## 🏷️ Etiquetas
 
-#visión-artificial #python #opencv #matplotlib #histogramas #ecualización #corrección-gamma
+#visión-artificial #python #opencv #scikit-image #matplotlib #transformaciones-espaciales #corrección-gamma

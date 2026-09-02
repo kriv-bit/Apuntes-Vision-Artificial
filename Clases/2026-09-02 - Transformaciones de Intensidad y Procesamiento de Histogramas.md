@@ -23,82 +23,72 @@ tags:
 ## 📝 Temas vistos
 
 1. **Núcleo del procesamiento en el dominio espacial (Operaciones Puntuales)**:
-   - Mapeo directo píxel a píxel con ventana de vecindad $1 \times 1$:
+   - Mapeo directo píxel a píxel con ventana $1 \times 1$:
      $$ s = T(r) $$
      donde $r$ es la intensidad de entrada del píxel y $s$ es la intensidad procesada de salida, con $r, s \in [0, L-1]$.
-2. **Transformaciones de Intensidad Fundamentales**:
-   - **Inversión Fotográfica / Negativo ($s = (L-1) - r$)**: Resalta estructuras claras o vasculares sobre fondos oscuros predominantes (ej. radiografías y mamografías).
-   - **Transformación Logarítmica ($s = c \log(1 + r)$)**: Expande el rango dinámico de los tonos oscuros y comprime los píxeles brillantes (esencial para visualizar espectros de Fourier).
-   - **Transformación de Ley de Potencias / Corrección Gamma ($s = c \cdot r^\gamma$)**: Calibración no lineal para pantallas y sensores ($\gamma < 1$ expande oscuros / aclara; $\gamma > 1$ comprime oscuros / oscurece).
-   - **Estiramiento de Contraste por Tramos (*Piecewise Linear*)**: Expande un subrango estrecho de intensidades $[r_1, r_2]$ hacia todo el rango disponible $[0, 255]$.
-3. **Histogramas de Imagen**:
-   - Representación estadística de la distribución de niveles de gris $h(r_k) = n_k$.
-   - Diagnóstico visual según el histograma: oscuro (cargado a la izquierda), brillante (cargado a la derecha), bajo contraste (pico estrecho central), alto contraste (distribución amplia en todo el rango).
-4. **Ecualización de Histograma (*Histogram Equalization*)**:
-   - Técnica automática que redistribuye los niveles de gris para obtener un histograma aproximadamente uniforme (plano), maximizando el contraste global mediante la Función de Distribución Acumulada (CDF).
-5. **Especificación / Emparejamiento de Histograma (*Histogram Matching*)**:
-   - Modificación de la imagen para que su histograma adopte una forma o distribución predefinida específica.
+2. **Transformaciones de Intensidad sobre la Imagen Lunar (`data.moon()`)**:
+   - **Inversión Fotográfica / Negativo ($s = (L-1) - r$)**: Resalta cráteres y detalles oscuros invirtiendo la escala.
+   - **Transformación Logarítmica ($s = c \log(1 + r)$)**: Expande intensidades oscuras haciendo visibles detalles tenues en el terreno lunar.
+   - **Corrección Gamma ($s = c \cdot r^\gamma$)**: Función modular `gamma_transform` probada con $\gamma = 0.5$ (aclarado), $\gamma = 1.0$ (identidad) y $\gamma = 2.0$ (oscurecido de sombras).
+   - **Estiramiento de Contraste por Percentiles**: Selección de umbrales robustos con `np.percentile(img, p)` y truncamiento seguro con `np.clip`.
+3. **Histogramas de Imagen y Ecualización**:
+   - Diagnóstico visual de iluminación y contraste mediante la función de distribución de frecuencias.
+   - Ecualización de histograma basada en la Función de Distribución Acumulada (CDF) para maximizar el rango dinámico.
 
 ---
 
 ## 🔍 Corrección y Clarificación Teórica
 
 > [!important] Aclaración sobre la Transformación Logarítmica
-> - **Efecto real:** La función logaritmo **no** potencia los niveles altos; hace exactamente lo contrario:
->   - **Expande** las intensidades bajas (tonos oscuros), haciéndolas más distinguibles y brillantes.
->   - **Comprime** las intensidades altas (tonos brillantes), evitando que los picos de intensidad deslumbren u oculten el resto de la información.
-> - Por ello, se usa obligatoriamente al graficar el **espectro de Fourier**, donde el componente central (DC) es millones de veces más intenso que las frecuencias altas.
+> - **Efecto real:** La función logaritmo **expande** las intensidades bajas (tonos oscuros), haciéndolas más distinguibles y brillantes, y **comprime** las intensidades altas (tonos brillantes).
+> - Se observa claramente en la imagen procesada de la Luna: el fondo negro y el polvo lunar gris se vuelven claros, mientras que los picos brillantes no deslumbran.
 
 ---
 
 ## 🧮 Ejemplos y Operaciones Resueltas Paso a Paso
 
-### 📌 1. Cálculo del Factor de Escala $c$ en Transformación Logarítmica
-Para garantizar que la salida esté en el rango $[0, 255]$ con $r_{\max} = 255$:
-
-$$ s = c \log(1 + r) \implies 255 = c \log(1 + 255) $$
-$$ c = \frac{255}{\log(1 + 255)} = \frac{255}{\log(256)} \approx \frac{255}{5.545} \approx \mathbf{45.98} \quad (\text{usando } \ln) $$
-*(O $c = \frac{255}{\log_{10}(256)} \approx \frac{255}{2.408} \approx \mathbf{105.89}$ si se usa base 10).*
+### 📌 1. Cálculo de $c_{log}$ para la Luna
+$$ c_{log} = \frac{255}{\ln(1 + \max(img))} $$
+Para una imagen de 8 bits con $\max(img) = 255$:
+$$ c_{log} = \frac{255}{\ln(256)} \approx \frac{255}{5.545} \approx \mathbf{45.98} $$
 
 ---
 
-### 📌 2. Corrección Gamma Paso a Paso
-Para un píxel oscuro $r = 64$ en una escala normalizada $r_{norm} = \frac{64}{255} \approx 0.2509$:
-
-#### A. Con $\gamma = 0.4$ (Expansión de oscuros / Aclarado):
-$$ s_{norm} = (0.2509)^{0.4} \approx 0.5755 $$
-$$ s = 255 \times 0.5755 \approx \mathbf{147} \quad \text{(El píxel oscuro sube de 64 a 147)} $$
-
-#### B. Con $\gamma = 2.5$ (Compresión de oscuros / Oscurecido):
-$$ s_{norm} = (0.2509)^{2.5} \approx 0.0315 $$
-$$ s = 255 \times 0.0315 \approx \mathbf{8} \quad \text{(El píxel se vuelve aún más oscuro)} $$
+### 📌 2. Corrección Gamma ($s = 255 \times (r / 255)^\gamma$)
+Para un píxel con intensidad $r = 64$ ($norm = 64/255 \approx 0.2509$):
+* **$\gamma = 0.5$ (Aclarar):** $s = 255 \times (0.2509)^{0.5} = 255 \times 0.5009 \approx \mathbf{128}$
+* **$\gamma = 1.0$ (Identidad):** $s = 255 \times (0.2509)^{1.0} \approx \mathbf{64}$
+* **$\gamma = 2.0$ (Oscurecer):** $s = 255 \times (0.2509)^{2.0} = 255 \times 0.0630 \approx \mathbf{16}$
 
 ---
 
-### 📌 3. Estiramiento de Contraste Lineal
-Dada una imagen con bajo contraste donde los píxeles útiles están concentrados entre $[r_{\min}, r_{\max}] = [50, 170]$:
+### 📌 3. Estiramiento de Contraste con Percentiles
+Para aislar y maximizar el rango de intensidades intermedias entre los percentiles $r_{\min} = P_{40}$ y $r_{\max} = P_{50}$:
 
-$$ s = 255 \times \left( \frac{r - 50}{170 - 50} \right) = 255 \times \left( \frac{r - 50}{120} \right) $$
+$$ s = \text{clip}\left( \frac{r - r_{\min}}{r_{\max} - r_{\min}} \times 255, 0, 255 \right) $$
 
-- Para $r = 50 \implies s = \mathbf{0}$
-- Para $r = 110 \implies s = 255 \times \frac{60}{120} = \mathbf{128}$
-- Para $r = 170 \implies s = \mathbf{255}$
+- Todo píxel con $r \le r_{\min}$ se satura a **0 (negro)**.
+- Todo píxel con $r \ge r_{\max}$ se satura a **255 (blanco)**.
+- El intervalo estrecho $[r_{\min}, r_{\max}]$ se expande linealmente ocupando todo el rango $[0, 255]$ (generando un efecto de binarización / alto contraste localizado).
 
 ---
 
-### 📌 4. Demostración de Ecualización de Histograma
-Para una micro-imagen de $4 \times 4$ ($N = 16$ píxeles) con $L = 8$ niveles de gris ($0$ a $7$):
+## 🖼️ Resultados Visuales de la Sesión
 
-| Nivel $r_k$ | Conteo $n_k$ | Probabilidad $p(r_k) = n_k/16$ | CDF Acumulada $\sum p$ | $s_k = \text{round}(7 \times \text{CDF})$ |
-| :---------: | :----------: | :----------------------------: | :--------------------: | :---------------------------------------: |
-| **0** | 8 | $8/16 = 0.500$ | $0.500$ | $\text{round}(7 \times 0.500) = \mathbf{4}$ |
-| **1** | 4 | $4/16 = 0.250$ | $0.750$ | $\text{round}(7 \times 0.750) = \mathbf{5}$ |
-| **2** | 2 | $2/16 = 0.125$ | $0.875$ | $\text{round}(7 \times 0.875) = \mathbf{6}$ |
-| **3** | 2 | $2/16 = 0.125$ | $1.000$ | $\text{round}(7 \times 1.000) = \mathbf{7}$ |
-| **4-7** | 0 | $0.000$ | $1.000$ | $\mathbf{7}$ |
+### 1. Imagen Original (`skimage.data.moon()`)
+![[transformacion-luna-original.png]]
 
-> [!tip] Conclusión
-> Los niveles originales comprimidos en el rango oscuro $[0, 3]$ fueron redistribuidos a $[4, 7]$, expandiendo el rango dinámico.
+### 2. Inversión Fotográfica / Negativo
+![[transformacion-luna-negativo.png]]
+
+### 3. Transformación Logarítmica
+![[transformacion-luna-logaritmica.png]]
+
+### 4. Comparativa de Corrección Gamma ($\gamma = 0.5, 1.0, 2.0$)
+![[transformacion-luna-gamma-comparacion.png]]
+
+### 5. Estiramiento de Contraste con Percentiles
+![[transformacion-luna-estiramiento-percentiles.png]]
 
 ---
 
@@ -116,8 +106,8 @@ Para una micro-imagen de $4 \times 4$ ($N = 16$ píxeles) con $L = 8$ niveles de
 
 ## 📌 Pendientes / tareas
 
-- [ ] Implementar CLAHE (*Contrast Limited Adaptive Histogram Equalization*) para ecualización local adaptativa.
-- [ ] Aplicar transformación logarítmica sobre la Transformada Rápida de Fourier (FFT) en Python con `np.fft.fft2`.
+- [ ] Comparar el estiramiento de percentiles amplios ($P_2$ a $P_{98}$) frente al estiramiento estrecho ($P_{40}$ a $P_{50}$).
+- [ ] Implementar CLAHE sobre la imagen lunar para realzar el relieve de los cráteres.
 
 ## 🏷️ Etiquetas
 
