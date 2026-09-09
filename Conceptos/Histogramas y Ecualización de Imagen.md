@@ -9,6 +9,7 @@ tags:
   - histogramas
   - ecualización
   - contraste
+  - histogram-matching
 aliases:
   - Histograma de imagen
   - Ecualización de histograma
@@ -56,22 +57,36 @@ Para cada nivel de gris de entrada $r_k$, el nuevo nivel de salida $s_k$ se obti
 
 $$ s_k = T(r_k) = \text{round}\left( (L - 1) \sum_{j=0}^k p(r_j) \right) = \text{round}\left( \frac{L - 1}{M \cdot N} \sum_{j=0}^k n_j \right) $$
 
-> [!tip] Propiedades de la Ecualización
-> 1. **Completamente automática:** No requiere ajuste de parámetros manuales ni umbrales.
-> 2. **Monótona creciente:** Preserva el orden relativo de brillo (las zonas oscuras siguen siendo más oscuras que las brillantes).
-> 3. **Reversible en teoría continua, pero con pérdida discreta:** En datos discretos, algunos niveles se fusionan, por lo que no es estrictamente invertible.
+> [!important] El efecto "Peine" (*Comb Effect*)
+> En el mundo discreto, la ecualización no produce una línea plana horizontal perfecta, sino barras separadas por huecos vacíos. Esto se debe a que los niveles de intensidad son números enteros finitos: no se pueden fraccionar píxeles para rellenar los huecos intermedios.
+
+![[histograma-ecualizacion-luna-comparacion.png]]
 
 ---
 
 ## 🎯 Especificación de Histograma (*Histogram Matching*)
 
-Mientras que la ecualización transforma la imagen para que su histograma sea siempre uniforme, la **especificación de histograma** permite forzar a la imagen a adoptar una **forma o distribución objetivo personalizada** $p_z(z)$:
+Mientras que la ecualización transforma la imagen para que su histograma sea siempre uniforme, la **especificación de histograma** permite forzar a la imagen a adoptar una **forma o distribución objetivo personalizada** $p_z(z)$ proveniente de una **imagen de referencia**:
+
+```mermaid
+graph LR
+    R["Imagen Entrada r"] --> T["Ecualizar: s = T(r)"]
+    Z["Imagen Referencia z"] --> G["Ecualizar: v = G(z)"]
+    T --> INV["Mapeo Inverso: z = G⁻¹(s)"]
+    G --> INV
+    INV --> RES["Imagen con distribución de referencia"]
+```
 
 1. Se ecualiza la imagen original: $s = T(r)$.
-2. Se calcula la transformación de ecualización para el histograma deseado: $v = G(z)$.
+2. Se calcula la transformación de ecualización para la referencia: $v = G(z)$.
 3. Se aplica el mapeo inverso: $z = G^{-1}(s) = G^{-1}(T(r))$.
 
-- **Uso principal:** Igualar la iluminación y tono entre imágenes tomadas por distintas cámaras, en diferentes horas del día o bajo condiciones lumínicas cambiantes.
+![[histograma-matching-especificacion-comparacion.png]]
+
+- **Ventajas prácticas:** 
+  - Normalización fotométrica entre múltiples cámaras de seguridad.
+  - Corrección de cambios drásticos de iluminación en secuencias de video.
+  - Igualación de contraste en imágenes médicas tomadas por distintos escáneres.
 
 ---
 
@@ -80,11 +95,12 @@ Mientras que la ecualización transforma la imagen para que su histograma sea si
 - [[Transformaciones de Intensidad Espacial]] — transformaciones lineales y no lineales
 - [[Desbordamiento y Normalización de Imágenes]] — normalización del rango dinámico
 - [[2026-09-02 - Transformaciones de Intensidad y Procesamiento de Histogramas]] — clase teórica
-- [[Transformaciones de Intensidad y Histogramas - Python]] — implementación con OpenCV
+- [[2026-09-08 - Ecualización y Especificación de Histogramas]] — clase práctica de ecualización y matching
+- [[Ecualización y Especificación de Histogramas - Python]] — código en OpenCV y scikit-image
 - [[Inicio]] — mapa general de la materia
 
 ---
 
 ## 🏷️ Etiquetas
 
-#visión-artificial #procesamiento-de-imágenes #histogramas #ecualización #contraste #cdf
+#visión-artificial #procesamiento-de-imágenes #histogramas #ecualización #contraste #histogram-matching #cdf

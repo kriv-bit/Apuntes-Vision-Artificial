@@ -22,6 +22,7 @@ tags:
 - [[2026-08-19 - Relaciones entre Píxeles y Métricas de Distancia]] — vecindades ($N_4, N_D, N_8$), $m$-adyacencia, caminos y distancias ($D_e, D_4, D_8$)
 - [[2026-09-01 - Operaciones Aritméticas y Lógicas entre Imágenes]] — suma/promedio, resta, multiplicación, división, desbordamiento, saturación y normalización
 - [[2026-09-02 - Transformaciones de Intensidad y Procesamiento de Histogramas]] — negativo, logarítmica, corrección gamma, estiramiento y ecualización de histogramas
+- [[2026-09-08 - Ecualización y Especificación de Histogramas]] — imágenes de bajo contraste, ecualización global y especificación (*Histogram Matching*) con imágenes de referencia
 
 ## 🧠 Conceptos
 
@@ -35,7 +36,7 @@ tags:
 - [[Desbordamiento y Normalización de Imágenes]] — overflow modular, saturación y reescalado Min-Max
 - [[Operaciones Lógicas y Álgebra Booleana en Imágenes]] — operadores binarios AND, OR, NOT, XOR y enmascaramiento
 - [[Transformaciones de Intensidad Espacial]] — transformaciones puntuales $s = T(r)$, negativo, logarítmica, gamma y por tramos
-- [[Histogramas y Ecualización de Imagen]] — funciones de distribución, análisis de contraste, CDF y ecualización
+- [[Histogramas y Ecualización de Imagen]] — funciones de distribución, análisis de contraste, CDF, ecualización y matching
 
 ## 💻 Código
 
@@ -44,6 +45,7 @@ tags:
 - [[Métricas de Distancia y Conectividad - Python]] — funciones de cálculo de $D_e, D_4, D_8$ y mapas de isolíneas
 - [[Operaciones Aritméticas y Normalización - Python]] — operaciones punto a punto, overflow, saturación y mezcla ponderada en OpenCV/scikit-image
 - [[Transformaciones de Intensidad y Histogramas - Python]] — transformaciones de intensidad, corrección gamma y ecualización de histograma
+- [[Ecualización y Especificación de Histogramas - Python]] — ecualización de imágenes de bajo contraste y emparejamiento de histogramas con `skimage.exposure`
 
 ## 🗺️ Estructura de la bóveda
 
@@ -54,6 +56,7 @@ graph TD
     Inicio --> C3[Clase 2026-08-19 Relaciones y Distancias]
     Inicio --> C4[Clase 2026-09-01 Operaciones y Normalización]
     Inicio --> C5[Clase 2026-09-02 Transformaciones e Histogramas]
+    Inicio --> C6[Clase 2026-09-08 Ecualización y Matching]
     
     C1 --> N1[Reducción de Niveles de Gris]
     C1 --> N2[Tamaño de Imagen Digital]
@@ -78,10 +81,14 @@ graph TD
     C5 --> N11[Histogramas y Ecualización]
     C5 --> P5[Python - Transformaciones e Histogramas]
     
+    C6 --> N11
+    C6 --> P6[Python - Ecualización y Matching]
+    
     N7 --> N8
     N8 --> P4
     N10 --> N11
     N11 --> P5
+    N11 --> P6
 ```
 
 ## 🛠️ Plantillas
@@ -116,4 +123,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#histogram-matching`
