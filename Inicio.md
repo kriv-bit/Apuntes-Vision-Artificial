@@ -23,6 +23,7 @@ tags:
 - [[2026-09-01 - Operaciones Aritméticas y Lógicas entre Imágenes]] — suma/promedio, resta, multiplicación, división, desbordamiento, saturación y normalización
 - [[2026-09-02 - Transformaciones de Intensidad y Procesamiento de Histogramas]] — negativo, logarítmica, corrección gamma, estiramiento y ecualización de histogramas
 - [[2026-09-08 - Ecualización y Especificación de Histogramas]] — imágenes de bajo contraste, ecualización global y especificación (*Histogram Matching*) con imágenes de referencia
+- [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] — máscaras/kernels, ventana deslizante, convolución vs correlación y los 4 métodos de padding
 
 ## 🧠 Conceptos
 
@@ -37,6 +38,8 @@ tags:
 - [[Operaciones Lógicas y Álgebra Booleana en Imágenes]] — operadores binarios AND, OR, NOT, XOR y enmascaramiento
 - [[Transformaciones de Intensidad Espacial]] — transformaciones puntuales $s = T(r)$, negativo, logarítmica, gamma y por tramos
 - [[Histogramas y Ecualización de Imagen]] — funciones de distribución, análisis de contraste, CDF, ecualización y matching
+- [[Filtrado Espacial y Convolución]] — máscaras impares, punto ancla, convolución 2D vs correlación cruzada y rotación de 180°
+- [[Manejo de Bordes y Padding en Imágenes]] — frontera del kernel: recorte, zero-padding, replicación y reflexión
 
 ## 💻 Código
 
@@ -46,6 +49,7 @@ tags:
 - [[Operaciones Aritméticas y Normalización - Python]] — operaciones punto a punto, overflow, saturación y mezcla ponderada en OpenCV/scikit-image
 - [[Transformaciones de Intensidad y Histogramas - Python]] — transformaciones de intensidad, corrección gamma y ecualización de histograma
 - [[Ecualización y Especificación de Histogramas - Python]] — ecualización de imágenes de bajo contraste y emparejamiento de histogramas con `skimage.exposure`
+- [[Filtrado Espacial y Modos de Padding - Python]] — modos de padding con `cv2.copyMakeBorder`, convolución vs correlación en SciPy y `cv2.filter2D`
 
 ## 🗺️ Estructura de la bóveda
 
@@ -57,6 +61,7 @@ graph TD
     Inicio --> C4[Clase 2026-09-01 Operaciones y Normalización]
     Inicio --> C5[Clase 2026-09-02 Transformaciones e Histogramas]
     Inicio --> C6[Clase 2026-09-08 Ecualización y Matching]
+    Inicio --> C7[Clase 2026-09-09 Filtrado Espacial y Padding]
     
     C1 --> N1[Reducción de Niveles de Gris]
     C1 --> N2[Tamaño de Imagen Digital]
@@ -84,11 +89,17 @@ graph TD
     C6 --> N11
     C6 --> P6[Python - Ecualización y Matching]
     
+    C7 --> N12[Filtrado Espacial y Convolución]
+    C7 --> N13[Manejo de Bordes y Padding]
+    C7 --> P7[Python - Filtrado y Padding]
+    
     N7 --> N8
     N8 --> P4
     N10 --> N11
     N11 --> P5
     N11 --> P6
+    N12 --> N13
+    N13 --> P7
 ```
 
 ## 🛠️ Plantillas
@@ -123,4 +134,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#histogram-matching`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding`
