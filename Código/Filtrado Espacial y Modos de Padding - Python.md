@@ -3,7 +3,7 @@ titulo: "Filtrado Espacial y Modos de Padding - Python"
 materia: Visión Artificial
 tipo: código
 fecha: 2026-09-09
-clase: "[[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]]"
+clase: "[[2026-09-15 - Implementación de Convolución y Modos de Borde]]"
 tags:
   - visión-artificial
   - python
@@ -22,13 +22,13 @@ aliases:
 # Filtrado Espacial y Modos de Padding — Python
 
 > [!info] ¿Qué es este código?
-> Este script demuestra en **Python con OpenCV, SciPy y Matplotlib**:
-> 1. Los **4 modos principales de padding** para el manejo de bordes usando `cv2.copyMakeBorder`.
-> 2. La diferencia práctica entre **Correlación** (`scipy.ndimage.correlate`) y **Convolución** (`scipy.ndimage.convolve`) usando un kernel asimétrico.
-> 3. El filtrado espacial lineal con `cv2.filter2D`.
+> Este script implementa en **Python (NumPy, OpenCV, SciPy y scikit-image)**:
+> 1. La función manual de convolución rotando el kernel 180° con slicing de NumPy (`kernel[::-1, ::-1]`).
+> 2. Comparativa experimental entre **Correlación** y **Convolución** usando **kernels simétricos** (idénticos) y **kernels asimétricos** (inversión de signos en gradientes).
+> 3. Comparativa visual de los modos de **padding de bordes** (`BORDER_CONSTANT`, `BORDER_REPLICATE`, `BORDER_REFLECT`) sobre dos imágenes de prueba.
 
-> [!info] Clase y conceptos relacionados
-> 📅 Clase: [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]]
+> [!info] Clases y conceptos relacionados
+> 📅 Clases: [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] y [[2026-09-15 - Implementación de Convolución y Modos de Borde]]
 > 🧠 Conceptos: [[Filtrado Espacial y Convolución]] y [[Manejo de Bordes y Padding en Imágenes]]
 
 ---
@@ -50,119 +50,180 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 from skimage import data
 
+# Configuración global de figuras
+plt.rcParams["figure.figsize"] = (10, 10)
+
+# Cargar imágenes de prueba estándar
+img1 = data.camera()
+img2 = data.coins()
+
 # ==============================================================================
-# 1. DEMOSTRACIÓN VISUAL DE LOS 4 TIPOS DE PADDING
+# 1. FUNCIÓN DE CONVOLUCIÓN MANUAL MEDIANTE ROTACIÓN DE 180°
 # ==============================================================================
-img = data.camera()  # Imagen de 512x512
+def correlation(image, kernel):
+    """Correlación espacial 2D usando scipy.ndimage"""
+    return ndimage.correlate(image, kernel, mode='reflect')
 
-# Definir un ancho de borde visible para inspección (e.g. 50 píxeles)
-pad = 50
+def convolution_manual(image, kernel):
+    """
+    Convolución espacial: igual que la correlación pero rotamos el kernel 180°.
+    En NumPy, el slice [::-1, ::-1] invierte filas y columnas en O(1).
+    """
+    kernel_r = kernel[::-1, ::-1]
+    return correlation(image, kernel_r)
 
-# 1. Relleno constante con ceros (Zero-Padding)
-pad_constant = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=0)
 
-# 2. Replicación (Clamp / Replicate)
-pad_replicate = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+# ==============================================================================
+# 2. EXPERIMENTO A: KERNEL SIMÉTRICO (PROMEDIO / SUAVIZADO)
+# ==============================================================================
+# Kernel simétrico de promedio 3x3
+kernel_p = np.ones((3, 3), dtype=np.float64) / 9.0
 
-# 3. Reflexión con duplicación (Mirror con frontera repetida)
-pad_reflect = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REFLECT)
+# Procesamiento de ambas imágenes
+corr_s_img1 = correlation(img1, kernel_p)
+conv_s_img1 = convolution_manual(img1, kernel_p)
 
-# 4. Reflexión sin duplicar frontera (Mirror 101 - Predeterminado en OpenCV)
-pad_reflect101 = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REFLECT_101)
+corr_s_img2 = correlation(img2, kernel_p)
+conv_s_img2 = convolution_manual(img2, kernel_p)
 
-fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+fig, axis = plt.subplots(2, 2, figsize=(10, 10))
 
-axes[0, 0].imshow(pad_constant, cmap='gray')
-axes[0, 0].set_title('1. BORDER_CONSTANT (Zero-Pad)')
-axes[0, 0].axis('off')
+axis[0, 0].imshow(corr_s_img1, cmap='gray')
+axis[0, 0].set_title('Correlation Image 1')
+axis[0, 0].axis("off")
 
-axes[0, 1].imshow(pad_replicate, cmap='gray')
-axes[0, 1].set_title('2. BORDER_REPLICATE (Clamp)')
-axes[0, 1].axis('off')
+axis[0, 1].imshow(conv_s_img1, cmap='gray')
+axis[0, 1].set_title('Convolucion Image 1')
+axis[0, 1].axis("off")
 
-axes[1, 0].imshow(pad_reflect, cmap='gray')
-axes[1, 0].set_title('3. BORDER_REFLECT (Mirror)')
-axes[1, 0].axis('off')
+axis[1, 0].imshow(corr_s_img2, cmap='gray')
+axis[1, 0].set_title('Correlation Image 2')
+axis[1, 0].axis("off")
 
-axes[1, 1].imshow(pad_reflect101, cmap='gray')
-axes[1, 1].set_title('4. BORDER_REFLECT_101 (Mirror 101)')
-axes[1, 1].axis('off')
+axis[1, 1].imshow(conv_s_img2, cmap='gray')
+axis[1, 1].set_title('Convolucion Image 2')
+axis[1, 1].axis("off")
 
 plt.tight_layout()
 plt.show()
 
 
 # ==============================================================================
-# 2. DEMOSTRACIÓN: CORRELACIÓN VS CONVOLUCIÓN
+# 3. EXPERIMENTO B: KERNEL ASIMÉTRICO (DERIVADA HORIZONTAL)
 # ==============================================================================
-# Definir un kernel ASIMÉTRICO (filtro de derivada horizontal)
-kernel_asimetrico = np.array([
-    [-1, 0, 1],
-    [-2, 0, 2],
-    [-1, 0, 1]
-], dtype=np.float32)
+# Definir kernel asimétrico de derivada horizontal: [1, 0, -1]
+kernel_as = np.array([[1, 0, -1]], dtype=np.float64)
 
-# Rotación manual de 180 grados del kernel (flip horizontal y vertical)
-kernel_rotado_180 = np.rot90(kernel_asimetrico, 2)
+# Embeber en una matriz 3x3
+kernel_ac = np.zeros((3, 3), dtype=np.float64)
+kernel_ac[1, :] = kernel_as  # Reemplazar fila central
 
-print("--- Kernel Original (Sobel Gx) ---")
-print(kernel_asimetrico)
-print("\n--- Kernel Rotado 180° ---")
-print(kernel_rotado_180)
+# Convertir a float64 antes de procesar para admitir valores negativos
+img1_f = img1.astype(np.float64)
+img2_f = img2.astype(np.float64)
 
-# Aplicar Correlación y Convolución con SciPy
-res_correlacion = ndimage.correlate(img.astype(float), kernel_asimetrico, mode='reflect')
-res_convolucion = ndimage.convolve(img.astype(float), kernel_asimetrico, mode='reflect')
+corr_as_img1 = correlation(img1_f, kernel_ac)
+conv_as_img1 = convolution_manual(img1_f, kernel_ac)
 
-# Comprobación de la regla de oro:
-# Convolución(K) == Correlación(K_rotado_180)
-res_correlacion_rotado = ndimage.correlate(img.astype(float), kernel_rotado_180, mode='reflect')
-error_regla_oro = np.max(np.abs(res_convolucion - res_correlacion_rotado))
+corr_as_img2 = correlation(img2_f, kernel_ac)
+conv_as_img2 = convolution_manual(img2_f, kernel_ac)
 
-print(f"\nDiscrepancia entre Convolución y Correlación rotada: {error_regla_oro:.6f}")
+fig, axis = plt.subplots(2, 2, figsize=(10, 10))
 
-fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+axis[0, 0].imshow(corr_as_img1, cmap='gray')
+axis[0, 0].set_title('Correlacion-Img1 (Asimétrica)')
+axis[0, 0].axis('off')
 
-axes[0].imshow(res_correlacion, cmap='gray')
-axes[0].set_title('Correlación Espacial (Sin rotación previa)')
-axes[0].axis('off')
+axis[0, 1].imshow(conv_as_img1, cmap='gray')
+axis[0, 1].set_title('Convolucion-Img1 (Invertida 180°)')
+axis[0, 1].axis('off')
 
-axes[1].imshow(res_convolucion, cmap='gray')
-axes[1].set_title('Convolución Espacial (Con rotación de 180°)')
-axes[1].axis('off')
+axis[1, 0].imshow(corr_as_img2, cmap='gray')
+axis[1, 0].set_title('Correlacion-Img2 (Asimétrica)')
+axis[1, 0].axis('off')
+
+axis[1, 1].imshow(conv_as_img2, cmap='gray')
+axis[1, 1].set_title('Convolucion-Img2 (Invertida 180°)')
+axis[1, 1].axis('off')
 
 plt.tight_layout()
 plt.show()
 
 
 # ==============================================================================
-# 3. FILTRADO CON OPENCV: cv2.filter2D
+# 4. EXPERIMENTO C: MODOS DE BORDER PADDING (cv2.copyMakeBorder)
 # ==============================================================================
-# Nota: cv2.filter2D realiza computacionalmente CORRELACIÓN.
-# Para hacer convolución estricta con OpenCV, se debe rotar el kernel primero con np.flip:
-# kernel_conv = np.flip(kernel)
-res_opencv = cv2.filter2D(img, ddepth=-1, kernel=kernel_asimetrico, borderType=cv2.BORDER_REFLECT_101)
+borde = 20
+
+# Padding sobre img1 (Cameraman)
+img1_zero = cv2.copyMakeBorder(img1, borde, borde, borde, borde, cv2.BORDER_CONSTANT, value=0)
+img1_replica = cv2.copyMakeBorder(img1, borde, borde, borde, borde, cv2.BORDER_REPLICATE)
+img1_reflect = cv2.copyMakeBorder(img1, borde, borde, borde, borde, cv2.BORDER_REFLECT)
+
+# Padding sobre img2 (Coins)
+img2_zero = cv2.copyMakeBorder(img2, borde, borde, borde, borde, cv2.BORDER_CONSTANT, value=0)
+img2_replica = cv2.copyMakeBorder(img2, borde, borde, borde, borde, cv2.BORDER_REPLICATE)
+img2_reflect = cv2.copyMakeBorder(img2, borde, borde, borde, borde, cv2.BORDER_REFLECT)
+
+fig, axis = plt.subplots(2, 3, figsize=(12, 8))
+
+axis[0, 0].imshow(img1_zero, cmap='gray')
+axis[0, 0].set_title('Cero img 1 (Constant 0)')
+axis[0, 0].axis('off')
+
+axis[0, 1].imshow(img1_replica, cmap='gray')
+axis[0, 1].set_title('Replicar img 1 (Replicate)')
+axis[0, 1].axis('off')
+
+axis[0, 2].imshow(img1_reflect, cmap='gray')
+axis[0, 2].set_title('Reflejar img 1 (Reflect)')
+axis[0, 2].axis('off')
+
+axis[1, 0].imshow(img2_zero, cmap='gray')
+axis[1, 0].set_title('Cero Img 2 (Constant 0)')
+axis[1, 0].axis('off')
+
+axis[1, 1].imshow(img2_replica, cmap='gray')
+axis[1, 1].set_title('Replicar Img 2 (Replicate)')
+axis[1, 1].axis('off')
+
+axis[1, 2].imshow(img2_reflect, cmap='gray')
+axis[1, 2].set_title('Reflejar Img 2 (Reflect)')
+axis[1, 2].axis('off')
+
+plt.tight_layout()
+plt.show()
 ```
 
 ---
 
-## 🔍 Puntos Clave de Implementación
+## 🔍 Explicación de los resultados visuales
 
-1. **`cv2.filter2D` de OpenCV**:
-   - Por motivos de optimización en hardware, `cv2.filter2D` ejecuta internamente **correlación**. Si el algoritmo exige convolución estricta sobre un kernel asimétrico, se debe invertir el kernel previamente con `np.flip(kernel)`.
-2. **`borderType` en OpenCV**:
-   - Permite elegir el comportamiento de borde directamente durante el filtrado sin tener que llamar a `copyMakeBorder` de forma manual. El predeterminado en la mayoría de filtros es `cv2.BORDER_REFLECT_101`.
-3. **Mapeo de la regla de oro**:
-   - La comprobación `np.max(np.abs(res_convolucion - res_correlacion_rotado))` da un error idéntico a $0.0$, demostrando matemáticamente que:
-     $$ \text{Convolución}(K) \equiv \text{Correlación}(K_{180^\circ}) $$
+### 1. Kernel Simétrico: Correlación $\equiv$ Convolución
+![[filtrado-kernel-simetrico-comparacion.png]]
+
+- Debido a que $w(s, t) = w(-s, -t)$, rotar la máscara $180^\circ$ no altera los coeficientes. La correlación y la convolución producen matrices idénticas.
+
+### 2. Kernel Asimétrico: Inversión de signos
+![[filtrado-kernel-asimetrico-comparacion.png]]
+
+- Al usar el kernel diferencial $[1, 0, -1]$, su rotado de 180° es $[-1, 0, 1]$.
+- Esto invierte la dirección de la derivada espacial: las zonas claras en correlación se vuelven oscuras en convolución, y viceversa.
+
+### 3. Comparativa de Padding
+![[padding-modos-comparacion-visual.png]]
+
+- **Constant (0):** Introduce un borde negro artificial.
+- **Replicate:** Extiende los píxeles perimetrales (útil en imágenes con fondo uniforme).
+- **Reflect:** Proporciona simetría y continuidad suave de gradientes en todas las direcciones.
 
 ---
 
 ## 🔗 Relacionado
 
-- [[Filtrado Espacial y Convolución]] — formulación matemática
+- [[Filtrado Espacial y Convolución]] — formulación teórica
 - [[Manejo de Bordes y Padding en Imágenes]] — fundamentos de frontera
-- [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] — apuntes de clase
+- [[2026-09-15 - Implementación de Convolución y Modos de Borde]] — clase de laboratorio
 - [[Inicio]] — mapa general de la materia
 
 ---

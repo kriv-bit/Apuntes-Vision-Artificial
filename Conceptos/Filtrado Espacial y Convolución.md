@@ -63,17 +63,23 @@ $$ g(x, y) = \sum_{s=-a}^a \sum_{t=-b}^b w(s, t) f(x - s, y - t) $$
 
 $$ w * f = w_{180^\circ} \circ f $$
 
-Rotar una matriz $180^\circ$ equivale a trasponer sus filas y columnas de manera invertida:
+En NumPy, la rotación de 180° se ejecuta de forma óptima mediante paso negativo bidimensional: `w[::-1, ::-1]`.
 
 $$ \begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} & w_{33} \end{bmatrix} \xrightarrow{180^\circ} \begin{bmatrix} w_{33} & w_{32} & w_{31} \\ w_{23} & w_{22} & w_{21} \\ w_{13} & w_{12} & w_{11} \end{bmatrix} $$
 
-### ¿Cuándo importa la diferencia?
-- **Kernels Simétricos ($w = w_{180^\circ}$):**
-  - Ejemplos: Filtro de caja (media), filtro Gaussiano, Laplaciano.
-  - Como la rotación de 180° deja la matriz idéntica, **la correlación y la convolución producen exactamente el mismo resultado**.
-- **Kernels Asimétricos ($w \neq w_{180^\circ}$):**
-  - Ejemplos: Operadores de gradiente y derivadas direccionales (Sobel horizontal $G_x$, Prewitt).
-  - La convolución invierte los signos de la derivada; si no se rota el kernel, los bordes detectados tendrán el signo opuesto al gradiente real.
+### Demostración Experimental:
+
+#### A. Kernels Simétricos ($w = w_{180^\circ}$)
+Ejemplos: Filtro de caja (media), filtro Gaussiano, Laplaciano.
+La rotación de 180° deja la matriz idéntica $\implies$ **Correlación y Convolución son idénticas**:
+
+![[filtrado-kernel-simetrico-comparacion.png]]
+
+#### B. Kernels Asimétricos ($w \neq w_{180^\circ}$)
+Ejemplos: Derivada horizontal $[1, 0, -1]$, Sobel $G_x$, Prewitt.
+La rotación invierte los signos de las transiciones de intensidad $\implies$ **Inversión de polaridad en bordes**:
+
+![[filtrado-kernel-asimetrico-comparacion.png]]
 
 ---
 
@@ -88,7 +94,8 @@ $$ \begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31
 
 - [[Manejo de Bordes y Padding en Imágenes]] — cómo tratar los extremos donde el kernel se desborda
 - [[Vecindad y Adyacencia de Píxeles]] — fundamentos de vecindad $N_4$ y $N_8$
-- [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] — clase correspondiente
+- [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] — clase teórica
+- [[2026-09-15 - Implementación de Convolución y Modos de Borde]] — clase práctica y experimental
 - [[Filtrado Espacial y Modos de Padding - Python]] — código en OpenCV y SciPy
 - [[Inicio]] — mapa de contenidos
 

@@ -126,6 +126,12 @@ $$ \begin{bmatrix}
 
 ---
 
+## 🖼️ Demostración Visual Experimental
+
+![[padding-modos-comparacion-visual.png]]
+
+---
+
 ## 📊 Tabla de Resumen y Recomendaciones
 
 | Método | Flag OpenCV | Mantiene tamaño | Continuidad visual | Cuándo usarlo |
@@ -142,6 +148,7 @@ $$ \begin{bmatrix}
 - [[Filtrado Espacial y Convolución]] — el proceso de convolución que genera la necesidad de padding
 - [[Vecindad y Adyacencia de Píxeles]] — topología de píxeles periféricos
 - [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] — clase teórica
+- [[2026-09-15 - Implementación de Convolución y Modos de Borde]] — clase de laboratorio experimental
 - [[Filtrado Espacial y Modos de Padding - Python]] — implementación con OpenCV
 - [[Inicio]] — mapa de contenidos
 

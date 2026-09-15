@@ -24,6 +24,7 @@ tags:
 - [[2026-09-02 - Transformaciones de Intensidad y Procesamiento de Histogramas]] — negativo, logarítmica, corrección gamma, estiramiento y ecualización de histogramas
 - [[2026-09-08 - Ecualización y Especificación de Histogramas]] — imágenes de bajo contraste, ecualización global y especificación (*Histogram Matching*) con imágenes de referencia
 - [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] — máscaras/kernels, ventana deslizante, convolución vs correlación y los 4 métodos de padding
+- [[2026-09-15 - Implementación de Convolución y Modos de Borde]] — verificación de kernels simétricos vs asimétricos, slicing `[::-1, ::-1]` y comparativa de padding
 
 ## 🧠 Conceptos
 
@@ -62,6 +63,7 @@ graph TD
     Inicio --> C5[Clase 2026-09-02 Transformaciones e Histogramas]
     Inicio --> C6[Clase 2026-09-08 Ecualización y Matching]
     Inicio --> C7[Clase 2026-09-09 Filtrado Espacial y Padding]
+    Inicio --> C8[Clase 2026-09-15 Convolución y Bordes en Código]
     
     C1 --> N1[Reducción de Niveles de Gris]
     C1 --> N2[Tamaño de Imagen Digital]
@@ -93,13 +95,9 @@ graph TD
     C7 --> N13[Manejo de Bordes y Padding]
     C7 --> P7[Python - Filtrado y Padding]
     
-    N7 --> N8
-    N8 --> P4
-    N10 --> N11
-    N11 --> P5
-    N11 --> P6
-    N12 --> N13
-    N13 --> P7
+    C8 --> N12
+    C8 --> N13
+    C8 --> P7
 ```
 
 ## 🛠️ Plantillas
