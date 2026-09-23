@@ -25,6 +25,7 @@ tags:
 - [[2026-09-08 - Ecualización y Especificación de Histogramas]] — imágenes de bajo contraste, ecualización global y especificación (*Histogram Matching*) con imágenes de referencia
 - [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] — máscaras/kernels, ventana deslizante, convolución vs correlación y los 4 métodos de padding
 - [[2026-09-15 - Implementación de Convolución y Modos de Borde]] — verificación de kernels simétricos vs asimétricos, slicing `[::-1, ::-1]` y comparativa de padding
+- [[2026-09-23 - Filtros de Suavizado y Separabilidad de Kernels]] — filtro de caja, filtro gaussiano, filtro de la mediana y optimización por separabilidad de $\mathcal{O}(K^2)$ a $\mathcal{O}(2K)$
 
 ## 🧠 Conceptos
 
@@ -41,6 +42,7 @@ tags:
 - [[Histogramas y Ecualización de Imagen]] — funciones de distribución, análisis de contraste, CDF, ecualización y matching
 - [[Filtrado Espacial y Convolución]] — máscaras impares, punto ancla, convolución 2D vs correlación cruzada y rotación de 180°
 - [[Manejo de Bordes y Padding en Imágenes]] — frontera del kernel: recorte, zero-padding, replicación y reflexión
+- [[Filtros de Suavizado Espacial]] — filtro de caja, filtro gaussiano, separabilidad $\mathcal{O}(K^2) \to \mathcal{O}(2K)$ y filtro de la mediana para ruido sal y pimienta
 
 ## 💻 Código
 
@@ -51,6 +53,7 @@ tags:
 - [[Transformaciones de Intensidad y Histogramas - Python]] — transformaciones de intensidad, corrección gamma y ecualización de histograma
 - [[Ecualización y Especificación de Histogramas - Python]] — ecualización de imágenes de bajo contraste y emparejamiento de histogramas con `skimage.exposure`
 - [[Filtrado Espacial y Modos de Padding - Python]] — modos de padding con `cv2.copyMakeBorder`, convolución vs correlación en SciPy y `cv2.filter2D`
+- [[Filtros de Suavizado y Separabilidad - Python]] — comparación de Box vs Gaussian vs Median Blur y benchmark de separabilidad con `cv2.sepFilter2D`
 
 ## 🗺️ Estructura de la bóveda
 
@@ -63,41 +66,40 @@ graph TD
     Inicio --> C5[Clase 2026-09-02 Transformaciones e Histogramas]
     Inicio --> C6[Clase 2026-09-08 Ecualización y Matching]
     Inicio --> C7[Clase 2026-09-09 Filtrado Espacial y Padding]
-    Inicio --> C8[Clase 2026-09-15 Convolución y Bordes en Código]
+    Inicio --> C8[Clase 2026-09-15 Convolución y Bordes]
+    Inicio --> C9[Clase 2026-09-23 Suavizado y Separabilidad]
     
     C1 --> N1[Reducción de Niveles de Gris]
     C1 --> N2[Tamaño de Imagen Digital]
     C1 --> N3[Resolución de Imagen]
     C1 --> N4[Interpolación]
-    C1 --> P1[Python - Cuantización]
     
     C2 --> N4
     C2 --> N3
-    C2 --> P2[Python - Interpolación OpenCV]
     
     C3 --> N5[Vecindad y Adyacencia]
     C3 --> N6[Métricas de Distancia]
-    C3 --> P3[Python - Distancias De D4 D8]
     
     C4 --> N7[Operaciones Aritméticas]
     C4 --> N8[Desbordamiento y Normalización]
     C4 --> N9[Operaciones Lógicas]
-    C4 --> P4[Python - Operaciones y Normalización]
     
     C5 --> N10[Transformaciones de Intensidad]
     C5 --> N11[Histogramas y Ecualización]
-    C5 --> P5[Python - Transformaciones e Histogramas]
     
     C6 --> N11
-    C6 --> P6[Python - Ecualización y Matching]
     
     C7 --> N12[Filtrado Espacial y Convolución]
     C7 --> N13[Manejo de Bordes y Padding]
-    C7 --> P7[Python - Filtrado y Padding]
     
     C8 --> N12
     C8 --> N13
-    C8 --> P7
+    
+    C9 --> N14[Filtros de Suavizado Espacial]
+    C9 --> P8[Python - Suavizado y Separabilidad]
+    
+    N12 --> N14
+    N14 --> P8
 ```
 
 ## 🛠️ Plantillas
@@ -132,4 +134,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#separabilidad`
