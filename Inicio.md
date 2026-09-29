@@ -26,6 +26,7 @@ tags:
 - [[2026-09-09 - Filtrado Espacial, Convolución y Manejo de Bordes]] — máscaras/kernels, ventana deslizante, convolución vs correlación y los 4 métodos de padding
 - [[2026-09-15 - Implementación de Convolución y Modos de Borde]] — verificación de kernels simétricos vs asimétricos, slicing `[::-1, ::-1]` y comparativa de padding
 - [[2026-09-23 - Filtros de Suavizado y Separabilidad de Kernels]] — filtro de caja, filtro gaussiano, filtro de la mediana y optimización por separabilidad de $\mathcal{O}(K^2)$ a $\mathcal{O}(2K)$
+- [[2026-09-29 - Derivadas Espaciales y Detección de Bordes]] — primera derivada ($d[i] = p[i+1] - p[i]$), segunda derivada ($f''$), matriz de la verdad, escalón vs rampa y Laplaciano
 
 ## 🧠 Conceptos
 
@@ -43,6 +44,7 @@ tags:
 - [[Filtrado Espacial y Convolución]] — máscaras impares, punto ancla, convolución 2D vs correlación cruzada y rotación de 180°
 - [[Manejo de Bordes y Padding en Imágenes]] — frontera del kernel: recorte, zero-padding, replicación y reflexión
 - [[Filtros de Suavizado Espacial]] — filtro de caja, filtro gaussiano, separabilidad $\mathcal{O}(K^2) \to \mathcal{O}(2K)$ y filtro de la mediana para ruido sal y pimienta
+- [[Derivadas Espaciales en Imágenes]] — diferencias finitas, vector gradiente (Sobel), operador Laplaciano, rampas vs escalones y LoG
 
 ## 💻 Código
 
@@ -54,6 +56,7 @@ tags:
 - [[Ecualización y Especificación de Histogramas - Python]] — ecualización de imágenes de bajo contraste y emparejamiento de histogramas con `skimage.exposure`
 - [[Filtrado Espacial y Modos de Padding - Python]] — modos de padding con `cv2.copyMakeBorder`, convolución vs correlación en SciPy y `cv2.filter2D`
 - [[Filtros de Suavizado y Separabilidad - Python]] — comparación de Box vs Gaussian vs Median Blur y benchmark de separabilidad con `cv2.sepFilter2D`
+- [[Derivadas y Bordes - Python]] — cálculo de Sobel $G_x, G_y$, Laplaciano, diferencias numéricas 1D y Laplaciano del Gaussiano (LoG)
 
 ## 🗺️ Estructura de la bóveda
 
@@ -68,38 +71,16 @@ graph TD
     Inicio --> C7[Clase 2026-09-09 Filtrado Espacial y Padding]
     Inicio --> C8[Clase 2026-09-15 Convolución y Bordes]
     Inicio --> C9[Clase 2026-09-23 Suavizado y Separabilidad]
-    
-    C1 --> N1[Reducción de Niveles de Gris]
-    C1 --> N2[Tamaño de Imagen Digital]
-    C1 --> N3[Resolución de Imagen]
-    C1 --> N4[Interpolación]
-    
-    C2 --> N4
-    C2 --> N3
-    
-    C3 --> N5[Vecindad y Adyacencia]
-    C3 --> N6[Métricas de Distancia]
-    
-    C4 --> N7[Operaciones Aritméticas]
-    C4 --> N8[Desbordamiento y Normalización]
-    C4 --> N9[Operaciones Lógicas]
-    
-    C5 --> N10[Transformaciones de Intensidad]
-    C5 --> N11[Histogramas y Ecualización]
-    
-    C6 --> N11
+    Inicio --> C10[Clase 2026-09-29 Derivadas y Bordes]
     
     C7 --> N12[Filtrado Espacial y Convolución]
-    C7 --> N13[Manejo de Bordes y Padding]
-    
     C8 --> N12
-    C8 --> N13
-    
     C9 --> N14[Filtros de Suavizado Espacial]
-    C9 --> P8[Python - Suavizado y Separabilidad]
+    C10 --> N15[Derivadas Espaciales en Imágenes]
     
     N12 --> N14
-    N14 --> P8
+    N14 --> N15
+    N15 --> P9[Python - Derivadas y Bordes]
 ```
 
 ## 🛠️ Plantillas
@@ -134,4 +115,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#separabilidad`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano`
