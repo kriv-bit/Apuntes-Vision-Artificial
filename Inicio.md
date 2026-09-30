@@ -27,6 +27,7 @@ tags:
 - [[2026-09-15 - Implementación de Convolución y Modos de Borde]] — verificación de kernels simétricos vs asimétricos, slicing `[::-1, ::-1]` y comparativa de padding
 - [[2026-09-23 - Filtros de Suavizado y Separabilidad de Kernels]] — filtro de caja, filtro gaussiano, filtro de la mediana y optimización por separabilidad de $\mathcal{O}(K^2)$ a $\mathcal{O}(2K)$
 - [[2026-09-29 - Derivadas Espaciales y Detección de Bordes]] — primera derivada ($d[i] = p[i+1] - p[i]$), segunda derivada ($f''$), matriz de la verdad, escalón vs rampa y Laplaciano
+- [[2026-09-30 - Realce de Imágenes - Unsharp Masking y High-Boost Filtering]] — algoritmo de 3 pasos, factor de peso $A$, acutancia visual, costo oculto de ruido y aplicaciones
 
 ## 🧠 Conceptos
 
@@ -45,6 +46,7 @@ tags:
 - [[Manejo de Bordes y Padding en Imágenes]] — frontera del kernel: recorte, zero-padding, replicación y reflexión
 - [[Filtros de Suavizado Espacial]] — filtro de caja, filtro gaussiano, separabilidad $\mathcal{O}(K^2) \to \mathcal{O}(2K)$ y filtro de la mediana para ruido sal y pimienta
 - [[Derivadas Espaciales en Imágenes]] — diferencias finitas, vector gradiente (Sobel), operador Laplaciano, rampas vs escalones y LoG
+- [[Unsharp Masking y High-Boost Filtering]] — realce de nitidez, máscara de altas frecuencias, factor $A$, acutancia y mitigación de ruido
 
 ## 💻 Código
 
@@ -57,6 +59,7 @@ tags:
 - [[Filtrado Espacial y Modos de Padding - Python]] — modos de padding con `cv2.copyMakeBorder`, convolución vs correlación en SciPy y `cv2.filter2D`
 - [[Filtros de Suavizado y Separabilidad - Python]] — comparación de Box vs Gaussian vs Median Blur y benchmark de separabilidad con `cv2.sepFilter2D`
 - [[Derivadas y Bordes - Python]] — cálculo de Sobel $G_x, G_y$, Laplaciano, diferencias numéricas 1D y Laplaciano del Gaussiano (LoG)
+- [[Unsharp Masking y High-Boost - Python]] — implementación de máscara de desenfoque, factor $A$, visualización de la máscara y control de ruido con umbral
 
 ## 🗺️ Estructura de la bóveda
 
@@ -72,15 +75,16 @@ graph TD
     Inicio --> C8[Clase 2026-09-15 Convolución y Bordes]
     Inicio --> C9[Clase 2026-09-23 Suavizado y Separabilidad]
     Inicio --> C10[Clase 2026-09-29 Derivadas y Bordes]
+    Inicio --> C11[Clase 2026-09-30 Unsharp Masking y High-Boost]
     
     C7 --> N12[Filtrado Espacial y Convolución]
-    C8 --> N12
     C9 --> N14[Filtros de Suavizado Espacial]
     C10 --> N15[Derivadas Espaciales en Imágenes]
+    C11 --> N16[Unsharp Masking y High-Boost]
     
-    N12 --> N14
-    N14 --> N15
-    N15 --> P9[Python - Derivadas y Bordes]
+    N14 --> N16
+    N15 --> N16
+    N16 --> P10[Python - Unsharp y High-Boost]
 ```
 
 ## 🛠️ Plantillas
@@ -115,4 +119,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost`
