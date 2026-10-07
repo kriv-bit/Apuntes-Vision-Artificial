@@ -28,6 +28,7 @@ tags:
 - [[2026-09-23 - Filtros de Suavizado y Separabilidad de Kernels]] — filtro de caja, filtro gaussiano, filtro de la mediana y optimización por separabilidad de $\mathcal{O}(K^2)$ a $\mathcal{O}(2K)$
 - [[2026-09-29 - Derivadas Espaciales y Detección de Bordes]] — primera derivada ($d[i] = p[i+1] - p[i]$), segunda derivada ($f''$), matriz de la verdad, escalón vs rampa y Laplaciano
 - [[2026-09-30 - Realce de Imágenes - Unsharp Masking y High-Boost Filtering]] — algoritmo de 3 pasos, factor de peso $A$, acutancia visual, costo oculto de ruido y aplicaciones
+- [[2026-10-07 - Operadores de Gradiente - Roberts, Prewitt y Sobel]] — operadores de 1ra derivada, comparación de kernels, mitigación de ruido Gaussiano y umbralización
 
 ## 🧠 Conceptos
 
@@ -47,6 +48,7 @@ tags:
 - [[Filtros de Suavizado Espacial]] — filtro de caja, filtro gaussiano, separabilidad $\mathcal{O}(K^2) \to \mathcal{O}(2K)$ y filtro de la mediana para ruido sal y pimienta
 - [[Derivadas Espaciales en Imágenes]] — diferencias finitas, vector gradiente (Sobel), operador Laplaciano, rampas vs escalones y LoG
 - [[Unsharp Masking y High-Boost Filtering]] — realce de nitidez, máscara de altas frecuencias, factor $A$, acutancia y mitigación de ruido
+- [[Operadores de Gradiente - Roberts, Prewitt y Sobel]] — máscaras $2\times 2$ y $3\times 3$, derivación más suavizado Gaussiano integrado y umbralización
 
 ## 💻 Código
 
@@ -60,6 +62,7 @@ tags:
 - [[Filtros de Suavizado y Separabilidad - Python]] — comparación de Box vs Gaussian vs Median Blur y benchmark de separabilidad con `cv2.sepFilter2D`
 - [[Derivadas y Bordes - Python]] — cálculo de Sobel $G_x, G_y$, Laplaciano, diferencias numéricas 1D y Laplaciano del Gaussiano (LoG)
 - [[Unsharp Masking y High-Boost - Python]] — implementación de máscara de desenfoque, factor $A$, visualización de la máscara y control de ruido con umbral
+- [[Operadores de Gradiente - Roberts, Prewitt y Sobel - Python]] — implementación y comparación de Roberts, Prewitt y Sobel con ruido Gaussiano y umbralización
 
 ## 🗺️ Estructura de la bóveda
 
@@ -76,15 +79,14 @@ graph TD
     Inicio --> C9[Clase 2026-09-23 Suavizado y Separabilidad]
     Inicio --> C10[Clase 2026-09-29 Derivadas y Bordes]
     Inicio --> C11[Clase 2026-09-30 Unsharp Masking y High-Boost]
+    Inicio --> C12[Clase 2026-10-07 Operadores de Gradiente]
     
-    C7 --> N12[Filtrado Espacial y Convolución]
-    C9 --> N14[Filtros de Suavizado Espacial]
     C10 --> N15[Derivadas Espaciales en Imágenes]
     C11 --> N16[Unsharp Masking y High-Boost]
+    C12 --> N17[Operadores de Gradiente]
     
-    N14 --> N16
-    N15 --> N16
-    N16 --> P10[Python - Unsharp y High-Boost]
+    N15 --> N17
+    N17 --> P11[Python - Roberts Prewitt Sobel]
 ```
 
 ## 🛠️ Plantillas
@@ -119,4 +121,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts`
