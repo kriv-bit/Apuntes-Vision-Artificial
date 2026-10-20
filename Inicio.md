@@ -29,6 +29,7 @@ tags:
 - [[2026-09-29 - Derivadas Espaciales y Detección de Bordes]] — primera derivada ($d[i] = p[i+1] - p[i]$), segunda derivada ($f''$), matriz de la verdad, escalón vs rampa y Laplaciano
 - [[2026-09-30 - Realce de Imágenes - Unsharp Masking y High-Boost Filtering]] — algoritmo de 3 pasos, factor de peso $A$, acutancia visual, costo oculto de ruido y aplicaciones
 - [[2026-10-07 - Operadores de Gradiente - Roberts, Prewitt y Sobel]] — operadores de 1ra derivada, comparación de kernels, mitigación de ruido Gaussiano y umbralización
+- [[2026-10-20 - Operador Laplaciano, Cruces por Cero y Filtro LoG]] — segunda derivada escalar, formulación discreta, zero-crossings, LoG sombrero mexicano y debate de ecógrafo
 
 ## 🧠 Conceptos
 
@@ -49,6 +50,8 @@ tags:
 - [[Derivadas Espaciales en Imágenes]] — diferencias finitas, vector gradiente (Sobel), operador Laplaciano, rampas vs escalones y LoG
 - [[Unsharp Masking y High-Boost Filtering]] — realce de nitidez, máscara de altas frecuencias, factor $A$, acutancia y mitigación de ruido
 - [[Operadores de Gradiente - Roberts, Prewitt y Sobel]] — máscaras $2\times 2$ y $3\times 3$, derivación más suavizado Gaussiano integrado y umbralización
+- [[Operador Laplaciano y Cruces por Cero]] — segunda derivada escalar, isotropía, suma nula de pesos y zero-crossings a 1 píxel
+- [[Filtro Laplaciano del Gaussiano - LoG]] — conmutatividad, sombrero mexicano, control de escala sigma y Marr-Hildreth
 
 ## 💻 Código
 
@@ -63,6 +66,7 @@ tags:
 - [[Derivadas y Bordes - Python]] — cálculo de Sobel $G_x, G_y$, Laplaciano, diferencias numéricas 1D y Laplaciano del Gaussiano (LoG)
 - [[Unsharp Masking y High-Boost - Python]] — implementación de máscara de desenfoque, factor $A$, visualización de la máscara y control de ruido con umbral
 - [[Operadores de Gradiente - Roberts, Prewitt y Sobel - Python]] — implementación y comparación de Roberts, Prewitt y Sobel con ruido Gaussiano y umbralización
+- [[Operador Laplaciano y Filtro LoG - Python]] — cálculo en OpenCV con cv2.Laplacian, LoG multiescala y algoritmo de zero-crossings
 
 ## 🗺️ Estructura de la bóveda
 
@@ -80,13 +84,16 @@ graph TD
     Inicio --> C10[Clase 2026-09-29 Derivadas y Bordes]
     Inicio --> C11[Clase 2026-09-30 Unsharp Masking y High-Boost]
     Inicio --> C12[Clase 2026-10-07 Operadores de Gradiente]
+    Inicio --> C13[Clase 2026-10-20 Laplaciano y LoG]
     
     C10 --> N15[Derivadas Espaciales en Imágenes]
     C11 --> N16[Unsharp Masking y High-Boost]
     C12 --> N17[Operadores de Gradiente]
+    C13 --> N18[Operador Laplaciano y LoG]
     
     N15 --> N17
-    N17 --> P11[Python - Roberts Prewitt Sobel]
+    N17 --> N18
+    N18 --> P12[Python - Laplaciano y LoG]
 ```
 
 ## 🛠️ Plantillas
