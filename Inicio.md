@@ -30,6 +30,7 @@ tags:
 - [[2026-09-30 - Realce de Imágenes - Unsharp Masking y High-Boost Filtering]] — algoritmo de 3 pasos, factor de peso $A$, acutancia visual, costo oculto de ruido y aplicaciones
 - [[2026-10-07 - Operadores de Gradiente - Roberts, Prewitt y Sobel]] — operadores de 1ra derivada, comparación de kernels, mitigación de ruido Gaussiano y umbralización
 - [[2026-10-20 - Operador Laplaciano, Cruces por Cero y Filtro LoG]] — segunda derivada escalar, formulación discreta, zero-crossings, LoG sombrero mexicano y debate de ecógrafo
+- [[2026-10-21 - Introducción al Dominio de la Frecuencia y Transformada de Fourier]] — Unidad 3: espectro, 2D-DFT, escala logarítmica, magnitud vs fase, filtros LPF/HPF y Notch
 
 ## 🧠 Conceptos
 
@@ -52,6 +53,9 @@ tags:
 - [[Operadores de Gradiente - Roberts, Prewitt y Sobel]] — máscaras $2\times 2$ y $3\times 3$, derivación más suavizado Gaussiano integrado y umbralización
 - [[Operador Laplaciano y Cruces por Cero]] — segunda derivada escalar, isotropía, suma nula de pesos y zero-crossings a 1 píxel
 - [[Filtro Laplaciano del Gaussiano - LoG]] — conmutatividad, sombrero mexicano, control de escala sigma y Marr-Hildreth
+- [[Dominio de la Frecuencia y Transformada de Fourier]] — 2D-DFT, componente DC, fftshift, escala logarítmica y la onda cuadrada
+- [[Magnitud y Fase en Fourier]] — el 'cuánto' vs el 'dónde', reconstrucción cruzada de Oppenheim y pérdida de inteligibilidad
+- [[Filtrado en el Dominio de la Frecuencia]] — teorema de convolución, filtros pasa-bajas, pasa-altas y eliminación de ruido periódico Notch
 
 ## 💻 Código
 
@@ -67,6 +71,7 @@ tags:
 - [[Unsharp Masking y High-Boost - Python]] — implementación de máscara de desenfoque, factor $A$, visualización de la máscara y control de ruido con umbral
 - [[Operadores de Gradiente - Roberts, Prewitt y Sobel - Python]] — implementación y comparación de Roberts, Prewitt y Sobel con ruido Gaussiano y umbralización
 - [[Operador Laplaciano y Filtro LoG - Python]] — cálculo en OpenCV con cv2.Laplacian, LoG multiescala y algoritmo de zero-crossings
+- [[Transformada de Fourier y Filtrado en Frecuencia - Python]] — FFT2 con NumPy, visualización logarítmica, cruce de fases y filtros LPF/HPF/Notch
 
 ## 🗺️ Estructura de la bóveda
 
@@ -85,15 +90,18 @@ graph TD
     Inicio --> C11[Clase 2026-09-30 Unsharp Masking y High-Boost]
     Inicio --> C12[Clase 2026-10-07 Operadores de Gradiente]
     Inicio --> C13[Clase 2026-10-20 Laplaciano y LoG]
+    Inicio --> C14[Clase 2026-10-21 Fourier y Frecuencia]
     
     C10 --> N15[Derivadas Espaciales en Imágenes]
     C11 --> N16[Unsharp Masking y High-Boost]
     C12 --> N17[Operadores de Gradiente]
     C13 --> N18[Operador Laplaciano y LoG]
+    C14 --> N19[Dominio de la Frecuencia y Fourier]
     
     N15 --> N17
     N17 --> N18
-    N18 --> P12[Python - Laplaciano y LoG]
+    N18 --> N19
+    N19 --> P13[Python - Fourier y Filtrado]
 ```
 
 ## 🛠️ Plantillas
