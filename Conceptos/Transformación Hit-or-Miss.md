@@ -121,7 +121,9 @@ Elimina pequeñas ramas parásitas (*spurs*) generadas durante la esqueletizaci�
 
 ## 🔗 Notas Relacionadas
 - [[Operaciones Morfológicas Binarias]] — Fundamentos de erosión, dilatación, apertura y cierre.
-- [[2026-11-03 - Morfología Matemática en Imágenes Binarias]] — Clase teórica detallada.
+- [[Adelgazamiento, Espesamiento y Esqueletización]] — Algoritmos iterativos de preservación topológica basados en Hit-or-Miss.
+- [[Morfología en Escala de Grises]] — Extensión a funciones continuas y modelo topográfico 3D.
+- [[2026-11-03 - Morfología Matemática - Binaria y Escala de Grises]] — Clase teórica detallada.
 - [[Morfología Matemática y Hit-or-Miss - Python]] — Laboratorio práctico y código ejecutable.
 - [[Vecindad y Adyacencia de Píxeles]] — Conectividad $N_4$ y $N_8$ en retículos discretos.
 - [[Inicio]] — Hub principal de la asignatura.

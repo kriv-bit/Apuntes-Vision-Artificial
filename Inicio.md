@@ -32,7 +32,7 @@ tags:
 - [[2026-10-20 - Operador Laplaciano, Cruces por Cero y Filtro LoG]] — segunda derivada escalar, formulación discreta, zero-crossings, LoG sombrero mexicano y debate de ecógrafo
 - [[2026-10-21 - Introducción al Dominio de la Frecuencia y Transformada de Fourier]] — Unidad 3: espectro, 2D-DFT, escala logarítmica, magnitud vs fase, filtros LPF/HPF y Notch
 - [[2026-10-28 - Reducción de Ruido Aditivo y Cíclico]] — Unidad 4: medias espacial/geométrica, mediana, alfa-recortada, picos de Fourier y filtros Notch
-- [[2026-11-03 - Morfología Matemática en Imágenes Binarias]] — Unidad 5: erosión, dilatación, elemento estructurante, dualidad, apertura, cierre y Hit-or-Miss
+- [[2026-11-03 - Morfología Matemática - Binaria y Escala de Grises]] — Unidad 5: erosión, dilatación, elemento estructurante, dualidad, apertura, cierre, bordes morfológicos, adelgazamiento y morfología en escala de grises
 
 ## 🧠 Conceptos
 
@@ -60,8 +60,10 @@ tags:
 - [[Filtrado en el Dominio de la Frecuencia]] — teorema de convolución, filtros pasa-bajas, pasa-altas y eliminación de ruido periódico Notch
 - [[Reducción de Ruido Aditivo y Espacial]] — filtros de medias, mediana, media alfa-recortada y punto medio frente a ruidos Gaussiano, uniforme y sal/pimienta
 - [[Filtros Notch y Rechaza Banda]] — atenuación de ruido periódico, simetría de pares conjugados y funciones Ideal, Butterworth y Gaussiana
-- [[Operaciones Morfológicas Binarias]] — teoría de conjuntos, elemento estructurante, dualidad objeto/fondo, apertura y cierre
+- [[Operaciones Morfológicas Binarias]] — teoría de conjuntos, elemento estructurante, dualidad objeto/fondo, apertura, cierre y bordes
 - [[Transformación Hit-or-Miss]] — elemento estructurante compuesto, kernels tri-estado, detección de patrones, esquinas y minucias de huellas dactilares
+- [[Adelgazamiento, Espesamiento y Esqueletización]] — adelgazamiento morfológico con Hit-or-Miss, preservación de topología, mitigación de sombra en huellas y OCR en placas vehiculares
+- [[Morfología en Escala de Grises]] — superficie topográfica 3D, máximo local (dilatación), mínimo local (erosión), gradiente morfológico y transformaciones top-hat/black-hat
 
 ## 💻 Código
 
@@ -100,19 +102,23 @@ graph TD
     Inicio --> C13[Clase 2026-10-20 Laplaciano y LoG]
     Inicio --> C14[Clase 2026-10-21 Fourier y Frecuencia]
     Inicio --> C15[Clase 2026-10-28 Ruido Aditivo y Cíclico]
-    Inicio --> C16[Clase 2026-11-03 Morfología y Hit-or-Miss]
+    Inicio --> C16[Clase 2026-11-03 Morfología Binaria y Grises]
     
     C14 --> N19[Dominio de la Frecuencia y Fourier]
     C15 --> N20[Reducción de Ruido Aditivo y Espacial]
     C15 --> N21[Filtros Notch y Rechaza Banda]
     C16 --> N22[Operaciones Morfológicas Binarias]
     C16 --> N23[Transformación Hit-or-Miss]
+    C16 --> N24[Adelgazamiento y Esqueletización]
+    C16 --> N25[Morfología en Escala de Grises]
     
     N19 --> N21
     N20 --> P14[Python - Ruido y Filtros Notch]
     N21 --> P14
     N22 --> P15[Python - Morfología y Hit-or-Miss]
     N23 --> P15
+    N24 --> P15
+    N25 --> P15
 ```
 
 ## 🛠️ Plantillas
@@ -147,4 +153,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico` · `#morfología-matemática` · `#imágenes-binarias` · `#erosión` · `#dilatación` · `#apertura` · `#cierre` · `#hit-or-miss`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico` · `#morfología-matemática` · `#imágenes-binarias` · `#erosión` · `#dilatación` · `#apertura` · `#cierre` · `#hit-or-miss` · `#extracción-de-bordes` · `#adelgazamiento` · `#espesamiento` · `#esqueletización` · `#escala-de-grises` · `#máximo-local` · `#mínimo-local`

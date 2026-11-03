@@ -128,6 +128,18 @@ $$A \bullet B = (A \oplus B) \ominus B$$
 
 ---
 
+## 📐 5. Extracción Morfológica de Bordes
+
+Restando la versión erosionada de la imagen original, se obtiene la frontera perimetral del objeto:
+
+$$\text{Original} - \text{Erosión} = \text{Borde Interno}$$
+$$\beta(A) = A \setminus (A \ominus B) = A - (A \ominus B)$$
+
+- **Borde externo**: $\beta_{\text{ext}}(A) = (A \oplus B) - A$.
+- **Gradiente morfológico**: $G(A) = (A \oplus B) - (A \ominus B)$.
+
+---
+
 ## 📊 Comparativa Rápida de Propiedades
 
 | Propiedad | Erosión ($A \ominus B$) | Dilatación ($A \oplus B$) | Apertura ($A \circ B$) | Cierre ($A \bullet B$) |
@@ -140,8 +152,10 @@ $$A \bullet B = (A \oplus B) \ominus B$$
 ---
 
 ## 🔗 Notas Relacionadas
-- [[2026-11-03 - Morfología Matemática en Imágenes Binarias]] — Clase teórica y contextualización de la sesión.
+- [[2026-11-03 - Morfología Matemática - Binaria y Escala de Grises]] — Clase teórica y contextualización de la sesión.
 - [[Transformación Hit-or-Miss]] — Detección exacta de patrones, esquinas y minucias de huellas dactilares.
+- [[Adelgazamiento, Espesamiento y Esqueletización]] — Preservación topológica y reducción a esqueletos.
+- [[Morfología en Escala de Grises]] — Superficies topográficas 3D, máximos y mínimos locales.
 - [[Morfología Matemática y Hit-or-Miss - Python]] — Implementación práctica con `cv2.erode`, `cv2.dilate` y `cv2.morphologyEx`.
 - [[Operaciones Lógicas y Álgebra Booleana en Imágenes]] — Conjuntos y máscaras booleanas.
 - [[Inicio]] — Hub principal de la asignatura.
