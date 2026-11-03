@@ -32,6 +32,7 @@ tags:
 - [[2026-10-20 - Operador Laplaciano, Cruces por Cero y Filtro LoG]] — segunda derivada escalar, formulación discreta, zero-crossings, LoG sombrero mexicano y debate de ecógrafo
 - [[2026-10-21 - Introducción al Dominio de la Frecuencia y Transformada de Fourier]] — Unidad 3: espectro, 2D-DFT, escala logarítmica, magnitud vs fase, filtros LPF/HPF y Notch
 - [[2026-10-28 - Reducción de Ruido Aditivo y Cíclico]] — Unidad 4: medias espacial/geométrica, mediana, alfa-recortada, picos de Fourier y filtros Notch
+- [[2026-11-03 - Morfología Matemática en Imágenes Binarias]] — Unidad 5: erosión, dilatación, elemento estructurante, dualidad, apertura, cierre y Hit-or-Miss
 
 ## 🧠 Conceptos
 
@@ -59,6 +60,8 @@ tags:
 - [[Filtrado en el Dominio de la Frecuencia]] — teorema de convolución, filtros pasa-bajas, pasa-altas y eliminación de ruido periódico Notch
 - [[Reducción de Ruido Aditivo y Espacial]] — filtros de medias, mediana, media alfa-recortada y punto medio frente a ruidos Gaussiano, uniforme y sal/pimienta
 - [[Filtros Notch y Rechaza Banda]] — atenuación de ruido periódico, simetría de pares conjugados y funciones Ideal, Butterworth y Gaussiana
+- [[Operaciones Morfológicas Binarias]] — teoría de conjuntos, elemento estructurante, dualidad objeto/fondo, apertura y cierre
+- [[Transformación Hit-or-Miss]] — elemento estructurante compuesto, kernels tri-estado, detección de patrones, esquinas y minucias de huellas dactilares
 
 ## 💻 Código
 
@@ -76,6 +79,7 @@ tags:
 - [[Operador Laplaciano y Filtro LoG - Python]] — cálculo en OpenCV con cv2.Laplacian, LoG multiescala y algoritmo de zero-crossings
 - [[Transformada de Fourier y Filtrado en Frecuencia - Python]] — FFT2 con NumPy, visualización logarítmica, cruce de fases y filtros LPF/HPF/Notch
 - [[Reducción de Ruido Aditivo y Filtros Notch - Python]] — comparativa espacial de ruido mixto y eliminación de franjas periódicas con Notch Gaussiano en 2D-FFT
+- [[Morfología Matemática y Hit-or-Miss - Python]] — operaciones morfológicas en OpenCV, verificación numérica de dualidad y banco de kernels rotados
 
 ## 🗺️ Estructura de la bóveda
 
@@ -96,14 +100,19 @@ graph TD
     Inicio --> C13[Clase 2026-10-20 Laplaciano y LoG]
     Inicio --> C14[Clase 2026-10-21 Fourier y Frecuencia]
     Inicio --> C15[Clase 2026-10-28 Ruido Aditivo y Cíclico]
+    Inicio --> C16[Clase 2026-11-03 Morfología y Hit-or-Miss]
     
     C14 --> N19[Dominio de la Frecuencia y Fourier]
     C15 --> N20[Reducción de Ruido Aditivo y Espacial]
     C15 --> N21[Filtros Notch y Rechaza Banda]
+    C16 --> N22[Operaciones Morfológicas Binarias]
+    C16 --> N23[Transformación Hit-or-Miss]
     
     N19 --> N21
     N20 --> P14[Python - Ruido y Filtros Notch]
     N21 --> P14
+    N22 --> P15[Python - Morfología y Hit-or-Miss]
+    N23 --> P15
 ```
 
 ## 🛠️ Plantillas
@@ -138,4 +147,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico` · `#morfología-matemática` · `#imágenes-binarias` · `#erosión` · `#dilatación` · `#apertura` · `#cierre` · `#hit-or-miss`
