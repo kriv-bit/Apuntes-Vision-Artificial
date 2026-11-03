@@ -205,7 +205,25 @@ def morfologia_escala_grises(imagen_gris, ksize=5):
     }
 
 # ==============================================================================
-# 6. DEMOSTRACIÓN PRINCIPAL Y VISUALIZACIÓN
+# 6. RESCATE DE TEXTO CON TOP-HAT (CORRECCIÓN DE ILUMINACIÓN Y SOMBRAS)
+# ==============================================================================
+def rescatar_texto_con_tophat(imagen_con_sombra, ksize_fondo=25):
+    """
+    Soluciona el problema de imágenes con fondo dispar, sombras o 'color feo':
+    1. Estima la baja frecuencia del fondo aplicando apertura con kernel grande.
+    2. Aplica White Top-Hat = Original - Apertura para eliminar el fondo.
+    3. Normaliza y binariza para recuperar el texto al 100% sin importar la sombra.
+    """
+    kernel_bg = cv2.getStructuringElement(cv2.MORPH_RECT, (ksize_fondo, ksize_fondo))
+    fondo_estimado = cv2.morphologyEx(imagen_con_sombra, cv2.MORPH_OPEN, kernel_bg)
+    tophat = cv2.morphologyEx(imagen_con_sombra, cv2.MORPH_TOPHAT, kernel_bg)
+    
+    # Binarización limpia sobre el fondo nivelado
+    _, texto_recuperado = cv2.threshold(tophat, 35, 255, cv2.THRESH_BINARY)
+    return fondo_estimado, tophat, texto_recuperado
+
+# ==============================================================================
+# 7. DEMOSTRACIÓN PRINCIPAL Y VISUALIZACIÓN
 # ==============================================================================
 if __name__ == "__main__":
     # --- PARTE A: DOMINIO BINARIO ---
@@ -299,6 +317,9 @@ El algoritmo iterativo extrae la esencia topológica restando en cada ciclo las 
 - `cv2.dilate` actúa como un **filtro de máximo no lineal**: para cada píxel, toma el valor más alto en el vecindario del kernel. En una superficie topográfica, esto expande las cimas y aplana hacia arriba los valles estrechos.
 - `cv2.erode` actúa como un **filtro de mínimo no lineal**: toma el valor más bajo, expandiendo los valles oscuros y rebajando la altura de las cimas brillantes.
 - El **Gradiente Morfológico** (`cv2.morphologyEx(..., cv2.MORPH_GRADIENT)`) computa la diferencia `Máximo - Mínimo`, realzando transiciones abruptas de pendiente sin importar la dirección del borde.
+
+### 4. Rescate de Texto y Compensación de Fondo con Top-Hat
+Cuando una imagen presenta un degradado de sombras o colores dispar ("color feo"), una binarización global clásica pierde el texto ubicado en las zonas en penumbra. Al aplicar un White Top-Hat con kernel mayor al grosor de las letras, la apertura modela el fondo luminoso continuo; al restarlo a la original, el fondo se nivela a cero y los caracteres resaltan con contraste óptimo en toda la imagen.
 
 ---
 

@@ -111,14 +111,37 @@ $$G(f) = (f \oplus b) - (f \ominus b) = \text{Máximo Local} - \text{Mínimo Loc
 - En zonas de transición de intensidad (bordes): la diferencia entre el máximo del lado claro y el mínimo del lado oscuro genera una cresta brillante que delimita el contorno exacto.
 
 ### 3.2. Transformaciones Top-Hat y Black-Hat
-Permiten corregir fondos con **iluminación no uniforme** o aislar detalles de textura:
+Permiten corregir fondos con **iluminación no uniforme**, eliminar sombras indeseadas y aislar texto o texturas sobre fondos desparejos:
+
+```mermaid
+graph TD
+    ORIG["Imagen Original con Iluminación Despareja ('Color Feo')"] --> AP["Apertura con SE Grande: Estima Fondo Suave"]
+    ORIG --> RESTA["Resta: Original - Apertura (White Top-Hat)"]
+    AP --> RESTA
+    RESTA --> RES["Fondo Nivelado a 0 + Texto/Detalles Clari Preservados"]
+```
 
 1. **White Top-Hat (Por apertura)**:
    $$T_{\text{white}}(f) = f - (f \circ b)$$
-   Resta a la imagen original su versión suavizada por apertura. Aísla todos aquellos elementos brillantes que son más pequeños que el elemento estructurante $B$.
+   Resta a la imagen original $f$ su apertura morfológica. Como la apertura con un kernel grande "borra" los detalles angostos y retiene las colinas suaves de iluminación del fondo, la resta suprime dicho fondo y aísla los elementos más claros que su vecindad circundante.
 2. **Black-Hat (Por cierre)**:
    $$T_{\text{black}}(f) = (f \bullet b) - f$$
-   Aísla todos aquellos elementos oscuros (detalles o defectos) más pequeños que el elemento estructurante $B$.
+   Resta a la imagen original su versión cerrada. Como el cierre rellena las cuencas o depresiones oscuras, al restarle la original al cierre se aísla el contenido de los valles (elementos oscuros como texto negro o grietas sobre fondo claro), dando como resultado una imagen donde el fondo se aplana y los detalles oscuros quedan destacados.
+
+### 3.3. Aplicación Industrial: Rescate de Texto y Nivelación de Fondo
+En escaneos de documentos o lectura de matrículas donde existe una gama de colores compleja o sombras diagonales severas ("color feo"):
+- La **binarización estándar falla** porque el umbral global manda a negro todo el texto que cayó dentro de la sombra.
+- Al calcular $T_{\text{white}}(f)$ o $T_{\text{black}}(f)$, la morfología desacopla la baja frecuencia espacial del fondo (la sombra continua) de la alta frecuencia espacial del trazo tipográfico.
+- La resta aplana el fondo a un valor constante, permitiendo umbralizar o procesar la imagen con éxito total.
+
+---
+
+## 🏔️ 4. La Síntesis: Del Cubo Booleano a la Superficie Topográfica
+
+> [!quote] Visión Integradora
+> - En **procesamiento binario**, las operaciones se conciben como el desplazamiento dentro de un **cubo o retículo booleano** donde las decisiones son estrictas: pertenencia o no pertenencia a un conjunto $\{0, 1\}$.
+> - En **escala de grises**, nos desplazamos a través de una **sección topográfica tridimensional** compuesta de cumbres, pendientes, collados y valles.
+> - Así como en el **dominio de la frecuencia** analizábamos picos de Fourier y en el **histograma** inspeccionábamos valles entre cúmulos de distribución para separar clases, en la **morfología en niveles de gris** la propia matriz espacial de la imagen es el relieve geográfico directo que exploramos con la sonda morfológica.
 
 ---
 
@@ -127,4 +150,5 @@ Permiten corregir fondos con **iluminación no uniforme** o aislar detalles de t
 - [[Adelgazamiento, Espesamiento y Esqueletización]] — Reducción topológica y preservación de conectividad.
 - [[2026-11-03 - Morfología Matemática - Binaria y Escala de Grises]] — Sesión teórica completa.
 - [[Morfología Matemática y Hit-or-Miss - Python]] — Implementación práctica con OpenCV (`cv2.morphologyEx`).
+- [[Transformaciones de Intensidad Espacial]] — Tratamiento clásico de contraste e iluminación.
 - [[Inicio]] — Hub principal de la asignatura.

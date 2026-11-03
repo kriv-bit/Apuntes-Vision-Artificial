@@ -200,11 +200,14 @@ Al pasar de imágenes binarias a imágenes en niveles de gris ($f: \mathbb{Z}^2 
 - Las zonas brillantes son **picos, mesetas o cumbres**.
 - Las zonas oscuras son **cuencas, hoyos o valles**.
 
+> [!quote] Metáfora de Síntesis del Profesor
+> *"Cuando trabajamos con procesamiento binario, nos movemos en un **cubo booleano** discreto (dentro o fuera del conjunto). En cambio, en la **escala de grises**, estamos en una **sección topográfica**, mirando montañitas. Esto se parece a mirar las montañitas en el dominio de la frecuencia (altas y bajas frecuencias) o los picos y valles en el histograma; pero aquí la montañita es la imagen misma en el espacio físico: cada píxel claro es una cumbre y cada píxel oscuro es un valle."*
+
 ### Comparativo Fundamental: Dominio Binario vs Dominio de Grises
 
 | Criterio | Dominio Binario ($\mathbb{Z}^2$) | Dominio de Niveles de Gris ($\mathbb{Z}^2 \times \mathbb{R}$) |
 | :--- | :--- | :--- |
-| **Modelo Matemático** | Teoría de Conjuntos | Superficie Topográfica 3D |
+| **Metáfora Conceptual** | Cubo Booleano / Pertenencia a Conjuntos | Sección Topográfica 3D ("Montañitas y Valles") |
 | **Dilatación ($A \oplus B$)** | **Unión** de traslaciones ($\bigcup$) | **Máximo Local** ($\max$) en la vecindad de $B$ |
 | **Erosión ($A \ominus B$)** | **Intersección** de traslaciones ($\bigcap$) | **Mínimo Local** ($\min$) en la vecindad de $B$ |
 | **Efecto de Dilatación** | Engrosa objetos blancos | Eleva los valles y expande las cumbres brillantes |
@@ -226,6 +229,53 @@ En regiones planas o suaves, el máximo y el mínimo son casi idénticos, por lo
 
 ---
 
+## 🎩 9. Transformaciones Top-Hat y Black-Hat: Corrección de Iluminación y Recuperación de Texto
+
+![Top-Hat y Rescate de Texto](morfologia-tophat-recuperacion-texto.png)
+
+Las transformaciones **Top-Hat** y **Black-Hat** son herramientas no lineales indispensables para resolver problemas donde el contraste o la iluminación varían espacialmente a través de la escena.
+
+### 9.1. Definición Matemática
+1. **White Top-Hat (o simplemente Top-Hat)**:
+   $$T_{\text{white}}(f) = f - (f \circ b)$$
+   Resta a la imagen original $f$ su versión filtrada por **apertura** morfológica.
+   - Dado que la apertura con un elemento estructurante grande elimina los elementos brillantes pequeños y retiene las variaciones suaves de baja frecuencia del fondo, la resta suprime el fondo y **aísla los elementos más brillantes** que su entorno.
+2. **Black-Hat (o Bottom-Hat)**:
+   $$T_{\text{black}}(f) = (f \bullet b) - f$$
+   Resta a la imagen original su versión filtrada por **cierre** morfológico.
+   - El cierre rellena las hendiduras, surcos y valles oscuros. Al restar la original al cierre, el resultado aísla los **elementos más oscuros** (valles o depresiones) respecto a la superficie cerrada circundante, arrojando una imagen con fondo oscuro donde destacan los detalles deprimidos.
+
+---
+
+### 9.2. Caso de Estudio Real: El Problema del «Color Feo», Sombras y Texto Ilegible
+
+> [!example] Situación Práctica en Visión por Computador
+> *"Cuando capturamos un documento o placa que posee una gama de colores dispar o sombras fuertes, si la pasamos directamente a blanco y negro con un umbral clásico, se pierde información: lo que queda en la sombra se vuelve una masa negra ilegible. Pero con Top-Hat o Black-Hat, al restarle el fondo estimado a la imagen original, eliminamos ese color feo o sombra degradada y recuperamos la totalidad del texto."*
+
+```mermaid
+graph TD
+    DOC["Imagen con Iluminación Despareja / Sombra Degradada ('Color Feo')"] --> PATH1["Intento Clásico: Binarización Global (Otsu)"]
+    PATH1 --> FAIL["FRACASO: Texto en sombras se pierde o empasta"]
+    
+    DOC --> PATH2["Flujo Morfológico Top-Hat"]
+    PATH2 --> AP["Apertura con SE Grande: Estima la superficie del fondo"]
+    PATH2 --> RESTA["Resta: Imagen Original - Fondo Estimado (Top-Hat)"]
+    RESTA --> NORM["Fondo Homogéneo y Plano a 0"]
+    NORM --> OCR["Texto Recuperado con 100% de Contraste"]
+```
+
+#### ¿Por qué funciona este método?
+1. **Separación de frecuencias topográficas**:
+   - El degradado de iluminación (la sombra suave o el color desparejo) es una **variación espacial lenta** (gran altitud suave en la montaña topográfica).
+   - Los caracteres del texto son **transiciones espaciales rápidas** (picos o valles muy angostos).
+2. **Estimación precisa del fondo**:
+   - Usando un elemento estructurante $b$ más ancho que las letras pero más pequeño que el tamaño global de la imagen, la apertura no puede entrar en las letras; por lo tanto, "borra" el texto y genera un mapa puro del fondo luminoso desparejo.
+3. **Sustracción y Recuperación**:
+   - Al restar $\text{Original} - \text{Fondo Estimado}$, el "color feo" o sombra desaparece por completo (se convierte en un nivel base uniforme y plano).
+   - El texto que estaba sumergido en la penumbra adquiere exactamente el mismo contraste que el texto que estaba en la zona sobreexpuesta, permitiendo una lectura u OCR impecable.
+
+---
+
 ## 🔗 Resumen de Fórmulas y Enlaces
 
 | Operación | Definición | Interpretación Práctica |
@@ -236,11 +286,13 @@ En regiones planas o suaves, el máximo y el mínimo son casi idénticos, por lo
 | **Dilatación Grises** | $(f \oplus b)(x, y) = \max_{B} f$ | Operador de Máximo Local topográfico |
 | **Erosión Grises** | $(f \ominus b)(x, y) = \min_{B} f$ | Operador de Mínimo Local topográfico |
 | **Gradiente Morfológico** | $G(f) = (f \oplus b) - (f \ominus b)$ | Detección no lineal de bordes |
+| **White Top-Hat** | $T_{\text{white}} = f - (f \circ b)$ | Aísla elementos claros; elimina fondos desiguales |
+| **Black-Hat** | $T_{\text{black}} = (f \bullet b) - f$ | Aísla elementos oscuros (texto sobre fondo claro) |
 
 ### Notas relacionadas
 - [[Operaciones Morfológicas Binarias]] — Fundamentos de conjuntos, dualidad y bordes.
 - [[Transformación Hit-or-Miss]] — Detección de patrones y minucias.
 - [[Adelgazamiento, Espesamiento y Esqueletización]] — Teoría de preservación topológica, huellas y foto-multas.
-- [[Morfología en Escala de Grises]] — Superficies 3D, máximos/mínimos locales y gradientes.
+- [[Morfología en Escala de Grises]] — Superficies 3D, máximos/mínimos locales, gradientes y Top-Hat.
 - [[Morfología Matemática y Hit-or-Miss - Python]] — Scripts ejecutables y comparativas visuales.
 - [[Inicio]] — Hub principal de la asignatura.
