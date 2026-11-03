@@ -33,6 +33,7 @@ tags:
 - [[2026-10-21 - Introducción al Dominio de la Frecuencia y Transformada de Fourier]] — Unidad 3: espectro, 2D-DFT, escala logarítmica, magnitud vs fase, filtros LPF/HPF y Notch
 - [[2026-10-28 - Reducción de Ruido Aditivo y Cíclico]] — Unidad 4: medias espacial/geométrica, mediana, alfa-recortada, picos de Fourier y filtros Notch
 - [[2026-11-03 - Morfología Matemática - Binaria y Escala de Grises]] — Unidad 5: erosión, dilatación, elemento estructurante, dualidad, apertura, cierre, bordes morfológicos, adelgazamiento y morfología en escala de grises
+- [[2026-11-03 - Modelos de Color - RGB, CMYK, HSI y Pseudocolor]] — Unidad 6: modelos aditivo (RGB) vs sustractivo (CMYK), espacio perceptual HSI, procesamiento de contraste seguro, diagrama CIE y pseudocolor
 
 ## 🧠 Conceptos
 
@@ -64,6 +65,9 @@ tags:
 - [[Transformación Hit-or-Miss]] — elemento estructurante compuesto, kernels tri-estado, detección de patrones, esquinas y minucias de huellas dactilares
 - [[Adelgazamiento, Espesamiento y Esqueletización]] — adelgazamiento morfológico con Hit-or-Miss, preservación de topología, mitigación de sombra en huellas y OCR en placas vehiculares
 - [[Morfología en Escala de Grises]] — superficie topográfica 3D, máximo local (dilatación), mínimo local (erosión), gradiente morfológico y transformaciones top-hat/black-hat
+- [[Modelos de Color RGB y CMYK]] — síntesis aditiva de luz vs sustractiva de tintas sobre papel blanco y compensación Key (K)
+- [[Espacio de Color HSI y Procesamiento Cromático]] — desacoplamiento de croma y luminancia, procesamiento de contraste en canal I y preservación de tono
+- [[Diagrama de Cromaticidad CIE y Pseudocolor]] — locus espectral 1931, límites de discriminación del ojo humano y mapas térmicos por falso color
 
 ## 💻 Código
 
@@ -82,6 +86,7 @@ tags:
 - [[Transformada de Fourier y Filtrado en Frecuencia - Python]] — FFT2 con NumPy, visualización logarítmica, cruce de fases y filtros LPF/HPF/Notch
 - [[Reducción de Ruido Aditivo y Filtros Notch - Python]] — comparativa espacial de ruido mixto y eliminación de franjas periódicas con Notch Gaussiano en 2D-FFT
 - [[Morfología Matemática y Hit-or-Miss - Python]] — operaciones morfológicas en OpenCV, verificación numérica de dualidad y banco de kernels rotados
+- [[Modelos de Color y Pseudocolor - Python]] — descomposición RGB/CMYK, ecualización segura en HSV/HSI y mapas de pseudocolor con OpenCV
 
 ## 🗺️ Estructura de la bóveda
 
@@ -103,6 +108,7 @@ graph TD
     Inicio --> C14[Clase 2026-10-21 Fourier y Frecuencia]
     Inicio --> C15[Clase 2026-10-28 Ruido Aditivo y Cíclico]
     Inicio --> C16[Clase 2026-11-03 Morfología Binaria y Grises]
+    Inicio --> C17[Clase 2026-11-03 Modelos de Color y HSI]
     
     C14 --> N19[Dominio de la Frecuencia y Fourier]
     C15 --> N20[Reducción de Ruido Aditivo y Espacial]
@@ -111,6 +117,9 @@ graph TD
     C16 --> N23[Transformación Hit-or-Miss]
     C16 --> N24[Adelgazamiento y Esqueletización]
     C16 --> N25[Morfología en Escala de Grises]
+    C17 --> N26[Modelos de Color RGB y CMYK]
+    C17 --> N27[Espacio HSI y Procesamiento]
+    C17 --> N28[Diagrama CIE y Pseudocolor]
     
     N19 --> N21
     N20 --> P14[Python - Ruido y Filtros Notch]
@@ -119,6 +128,9 @@ graph TD
     N23 --> P15
     N24 --> P15
     N25 --> P15
+    N26 --> P16[Python - Color y Pseudocolor]
+    N27 --> P16
+    N28 --> P16
 ```
 
 ## 🛠️ Plantillas
@@ -153,4 +165,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico` · `#morfología-matemática` · `#imágenes-binarias` · `#erosión` · `#dilatación` · `#apertura` · `#cierre` · `#hit-or-miss` · `#extracción-de-bordes` · `#adelgazamiento` · `#espesamiento` · `#esqueletización` · `#escala-de-grises` · `#máximo-local` · `#mínimo-local` · `#top-hat` · `#black-hat`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico` · `#morfología-matemática` · `#imágenes-binarias` · `#erosión` · `#dilatación` · `#apertura` · `#cierre` · `#hit-or-miss` · `#extracción-de-bordes` · `#adelgazamiento` · `#espesamiento` · `#esqueletización` · `#escala-de-grises` · `#máximo-local` · `#mínimo-local` · `#top-hat` · `#black-hat` · `#modelos-de-color` · `#rgb` · `#cmyk` · `#hsi` · `#hsv` · `#pseudocolor` · `#diagrama-cie`
