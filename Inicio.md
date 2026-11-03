@@ -31,6 +31,7 @@ tags:
 - [[2026-10-07 - Operadores de Gradiente - Roberts, Prewitt y Sobel]] — operadores de 1ra derivada, comparación de kernels, mitigación de ruido Gaussiano y umbralización
 - [[2026-10-20 - Operador Laplaciano, Cruces por Cero y Filtro LoG]] — segunda derivada escalar, formulación discreta, zero-crossings, LoG sombrero mexicano y debate de ecógrafo
 - [[2026-10-21 - Introducción al Dominio de la Frecuencia y Transformada de Fourier]] — Unidad 3: espectro, 2D-DFT, escala logarítmica, magnitud vs fase, filtros LPF/HPF y Notch
+- [[2026-10-28 - Reducción de Ruido Aditivo y Cíclico]] — Unidad 4: medias espacial/geométrica, mediana, alfa-recortada, picos de Fourier y filtros Notch
 
 ## 🧠 Conceptos
 
@@ -56,6 +57,8 @@ tags:
 - [[Dominio de la Frecuencia y Transformada de Fourier]] — 2D-DFT, componente DC, fftshift, escala logarítmica y la onda cuadrada
 - [[Magnitud y Fase en Fourier]] — el 'cuánto' vs el 'dónde', reconstrucción cruzada de Oppenheim y pérdida de inteligibilidad
 - [[Filtrado en el Dominio de la Frecuencia]] — teorema de convolución, filtros pasa-bajas, pasa-altas y eliminación de ruido periódico Notch
+- [[Reducción de Ruido Aditivo y Espacial]] — filtros de medias, mediana, media alfa-recortada y punto medio frente a ruidos Gaussiano, uniforme y sal/pimienta
+- [[Filtros Notch y Rechaza Banda]] — atenuación de ruido periódico, simetría de pares conjugados y funciones Ideal, Butterworth y Gaussiana
 
 ## 💻 Código
 
@@ -72,6 +75,7 @@ tags:
 - [[Operadores de Gradiente - Roberts, Prewitt y Sobel - Python]] — implementación y comparación de Roberts, Prewitt y Sobel con ruido Gaussiano y umbralización
 - [[Operador Laplaciano y Filtro LoG - Python]] — cálculo en OpenCV con cv2.Laplacian, LoG multiescala y algoritmo de zero-crossings
 - [[Transformada de Fourier y Filtrado en Frecuencia - Python]] — FFT2 con NumPy, visualización logarítmica, cruce de fases y filtros LPF/HPF/Notch
+- [[Reducción de Ruido Aditivo y Filtros Notch - Python]] — comparativa espacial de ruido mixto y eliminación de franjas periódicas con Notch Gaussiano en 2D-FFT
 
 ## 🗺️ Estructura de la bóveda
 
@@ -91,17 +95,15 @@ graph TD
     Inicio --> C12[Clase 2026-10-07 Operadores de Gradiente]
     Inicio --> C13[Clase 2026-10-20 Laplaciano y LoG]
     Inicio --> C14[Clase 2026-10-21 Fourier y Frecuencia]
+    Inicio --> C15[Clase 2026-10-28 Ruido Aditivo y Cíclico]
     
-    C10 --> N15[Derivadas Espaciales en Imágenes]
-    C11 --> N16[Unsharp Masking y High-Boost]
-    C12 --> N17[Operadores de Gradiente]
-    C13 --> N18[Operador Laplaciano y LoG]
     C14 --> N19[Dominio de la Frecuencia y Fourier]
+    C15 --> N20[Reducción de Ruido Aditivo y Espacial]
+    C15 --> N21[Filtros Notch y Rechaza Banda]
     
-    N15 --> N17
-    N17 --> N18
-    N18 --> N19
-    N19 --> P13[Python - Fourier y Filtrado]
+    N19 --> N21
+    N20 --> P14[Python - Ruido y Filtros Notch]
+    N21 --> P14
 ```
 
 ## 🛠️ Plantillas
@@ -136,4 +138,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico`
