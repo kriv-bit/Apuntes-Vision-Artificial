@@ -34,6 +34,7 @@ tags:
 - [[2026-10-28 - Reducción de Ruido Aditivo y Cíclico]] — Unidad 4: medias espacial/geométrica, mediana, alfa-recortada, picos de Fourier y filtros Notch
 - [[2026-11-03 - Morfología Matemática - Binaria y Escala de Grises]] — Unidad 5: erosión, dilatación, elemento estructurante, dualidad, apertura, cierre, bordes morfológicos, adelgazamiento y morfología en escala de grises
 - [[2026-11-03 - Modelos de Color - RGB, CMYK, HSI y Pseudocolor]] — Unidad 6: modelos aditivo (RGB) vs sustractivo (CMYK), espacio perceptual HSI, procesamiento de contraste seguro, diagrama CIE y pseudocolor
+- [[2026-11-04 - Color y Segmentación de Imágenes]] — Unidad 6: modelos de color, rebanado circular en HSI, Sobel, enlace local iterativo, Hough, Otsu vs adaptativo y K-medias
 
 ## 🧠 Conceptos
 
@@ -68,6 +69,11 @@ tags:
 - [[Modelos de Color RGB y CMYK]] — síntesis aditiva de luz vs sustractiva de tintas sobre papel blanco y compensación Key (K)
 - [[Espacio de Color HSI y Procesamiento Cromático]] — desacoplamiento de croma y luminancia, procesamiento de contraste en canal I y preservación de tono
 - [[Diagrama de Cromaticidad CIE y Pseudocolor]] — locus espectral 1931, límites de discriminación del ojo humano y mapas térmicos por falso color
+- [[Rebanado de Color y Operaciones Cromáticas]] — rebanado de color (*color slicing*), distancia circular de matiz $d_H$, rotación de matiz, desaturación y filtrado seguro de intensidad
+- [[Enlace Local de Bordes]] — propagación iterativa de contornos, clasificación fuerte/débil, conectividad de 8 vecinos y coherencia angular de $30^\circ$
+- [[Transformada de Hough]] — detección global de rectas en espacio normal $\rho = x \cos \theta + y \sin \theta$ mediante acumulador de votos
+- [[Segmentación por Umbralización - Otsu y Adaptativo]] — umbral global óptimo por varianza inter-clase vs umbral adaptativo Gaussiano ante iluminación no homogénea
+- [[Segmentación y Cuantización por K-Medias]] — agrupamiento espectral de vectores de píxeles RGB en $\mathbb{R}^3$, compacidad/inercia y límites de semántica espacial
 
 ## 💻 Código
 
@@ -87,6 +93,8 @@ tags:
 - [[Reducción de Ruido Aditivo y Filtros Notch - Python]] — comparativa espacial de ruido mixto y eliminación de franjas periódicas con Notch Gaussiano en 2D-FFT
 - [[Morfología Matemática y Hit-or-Miss - Python]] — operaciones morfológicas en OpenCV, verificación numérica de dualidad y banco de kernels rotados
 - [[Modelos de Color y Pseudocolor - Python]] — descomposición RGB/CMYK, ecualización segura en HSV/HSI y mapas de pseudocolor con OpenCV
+- [[Procesamiento y Rebanado de Color - Python]] — conversión exacta RGB-HSI, pseudocolor por bandas vs inferno, rebanado circular de matiz y rotación cromática
+- [[Segmentación por Bordes y Agrupamiento - Python]] — gradiente Sobel 64F, algoritmo iterativo de enlace local, Hough para rectas, Otsu vs adaptativo y clustering K-medias
 
 ## 🗺️ Estructura de la bóveda
 
@@ -109,6 +117,7 @@ graph TD
     Inicio --> C15[Clase 2026-10-28 Ruido Aditivo y Cíclico]
     Inicio --> C16[Clase 2026-11-03 Morfología Binaria y Grises]
     Inicio --> C17[Clase 2026-11-03 Modelos de Color y HSI]
+    Inicio --> C18[Clase 2026-11-04 Color y Segmentación]
     
     C14 --> N19[Dominio de la Frecuencia y Fourier]
     C15 --> N20[Reducción de Ruido Aditivo y Espacial]
@@ -120,6 +129,11 @@ graph TD
     C17 --> N26[Modelos de Color RGB y CMYK]
     C17 --> N27[Espacio HSI y Procesamiento]
     C17 --> N28[Diagrama CIE y Pseudocolor]
+    C18 --> N29[Rebanado y Transformaciones de Color]
+    C18 --> N30[Enlace Local de Bordes]
+    C18 --> N31[Transformada de Hough]
+    C18 --> N32[Umbralización Otsu y Adaptativo]
+    C18 --> N33[Segmentación y K-Medias]
     
     N19 --> N21
     N20 --> P14[Python - Ruido y Filtros Notch]
@@ -131,6 +145,11 @@ graph TD
     N26 --> P16[Python - Color y Pseudocolor]
     N27 --> P16
     N28 --> P16
+    N29 --> P17[Python - Procesamiento y Rebanado]
+    N30 --> P18[Python - Segmentación y Bordes]
+    N31 --> P18
+    N32 --> P18
+    N33 --> P18
 ```
 
 ## 🛠️ Plantillas
@@ -165,4 +184,4 @@ SORT fecha DESC
 
 ## 🏷️ Etiquetas principales
 
-- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico` · `#morfología-matemática` · `#imágenes-binarias` · `#erosión` · `#dilatación` · `#apertura` · `#cierre` · `#hit-or-miss` · `#extracción-de-bordes` · `#adelgazamiento` · `#espesamiento` · `#esqueletización` · `#escala-de-grises` · `#máximo-local` · `#mínimo-local` · `#top-hat` · `#black-hat` · `#modelos-de-color` · `#rgb` · `#cmyk` · `#hsi` · `#hsv` · `#pseudocolor` · `#diagrama-cie`
+- `#visión-artificial` · `#clase` · `#python` · `#opencv` · `#interpolación` · `#vecindad` · `#adyacencia` · `#distancias` · `#operaciones-aritméticas` · `#normalización` · `#transformaciones-espaciales` · `#histogramas` · `#ecualización` · `#filtrado-espacial` · `#convolución` · `#padding` · `#suavizado` · `#filtro-gaussiano` · `#filtro-mediana` · `#derivadas-espaciales` · `#detección-de-bordes` · `#gradiente` · `#laplaciano` · `#unsharp-masking` · `#high-boost` · `#sobel` · `#prewitt` · `#roberts` · `#fourier` · `#dominio-de-la-frecuencia` · `#reducción-de-ruido` · `#filtros-notch` · `#ruido-periódico` · `#morfología-matemática` · `#imágenes-binarias` · `#erosión` · `#dilatación` · `#apertura` · `#cierre` · `#hit-or-miss` · `#extracción-de-bordes` · `#adelgazamiento` · `#espesamiento` · `#esqueletización` · `#escala-de-grises` · `#máximo-local` · `#mínimo-local` · `#top-hat` · `#black-hat` · `#modelos-de-color` · `#rgb` · `#cmyk` · `#hsi` · `#hsv` · `#pseudocolor` · `#diagrama-cie` · `#rebanado-de-color` · `#enlace-de-bordes` · `#transformada-de-hough` · `#segmentación` · `#otsu` · `#umbral-adaptativo` · `#k-medias` · `#clustering`
